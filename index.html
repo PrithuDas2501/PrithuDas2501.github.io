@@ -22,8 +22,7 @@
   --rule:     #C7CCC9;   /* hairlines                              */
   --muted:    #5B615F;   /* secondary text on paper                */
   --muted-d:  #8A918F;   /* secondary text on ink                  */
-  --flux:     #D81E5B;   /* the accent. Used only for the optimised
-                            direction, live links, and markers      */
+  --flux:     #D81E5B;   /* the accent — links, markers, rules     */
   --trace:    #7FD3E6;   /* second data colour, dark surfaces only */
 
   --display: "Archivo", system-ui, sans-serif;
@@ -57,7 +56,7 @@ a{ color:inherit; }
 .eyebrow{
   font-family:var(--mono);
   font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--muted); margin:0 0 6px;
+  color:var(--muted); margin:0 0 14px;
 }
 .band-head{
   display:flex; align-items:baseline; gap:16px; flex-wrap:wrap;
@@ -121,9 +120,11 @@ a{ color:inherit; }
   font-size:clamp(46px,7.6vw,92px); line-height:.92; letter-spacing:-.035em;
   margin:0 0 22px;
 }
+/* max-width widened to 50ch — a full intro paragraph needs a longer line
+   than the short one-liner this originally held. */
 .hero .thesis{
-  font-size:clamp(17px,1.5vw,21px); line-height:1.5;
-  color:#E4E6E6; max-width:34ch; margin:0 0 28px;
+  font-size:clamp(16.5px,1.32vw,19px); line-height:1.55;
+  color:#E4E6E6; max-width:50ch; margin:0 0 28px;
 }
 .hero .thesis em{ color:var(--flux); font-style:normal; }
 
@@ -365,7 +366,7 @@ a{ color:inherit; }
 <section class="band" id="about">
   <div class="wrap rise">
     <div class="band-head">
-      <div><p class="eyebrow">About</p><h2>Theory that has to survive a flight test</h2></div>
+      <h2>About</h2>
     </div>
 
     <div class="about-grid">
@@ -416,7 +417,7 @@ a{ color:inherit; }
 <section class="band" id="research">
   <div class="wrap rise">
     <div class="band-head">
-      <div><p class="eyebrow">Research</p><h2>Five threads</h2></div>
+      <h2>Research</h2>
       <span class="count">2022 — present</span>
     </div>
 
@@ -506,7 +507,7 @@ a{ color:inherit; }
 <section class="band" id="publications">
   <div class="wrap rise">
     <div class="band-head">
-      <div><p class="eyebrow">Publications &amp; patent</p><h2>Written record</h2></div>
+      <h2>Publications</h2>
       <span class="count">4 conference · 1 journal · 1 patent</span>
     </div>
 
@@ -568,7 +569,7 @@ a{ color:inherit; }
 <section class="band" id="hardware">
   <div class="wrap rise">
     <div class="band-head">
-      <div><p class="eyebrow">Hardware</p><h2>Things that actually flew, rolled, or spun</h2></div>
+      <h2>Hardware</h2>
       <span class="count">5 builds</span>
     </div>
 
@@ -644,32 +645,36 @@ a{ color:inherit; }
 <section class="band" id="toolkit">
   <div class="wrap rise">
     <div class="band-head">
-      <div><p class="eyebrow">Toolkit &amp; recognition</p><h2>What I reach for</h2></div>
+      <h2>Toolkit &amp; Awards</h2>
     </div>
 
     <div class="two">
-      <dl class="kit">
-        <dt>Programming</dt>
-        <dd><span class="chip">Python</span><span class="chip">C / C++</span><span class="chip">MATLAB</span><span class="chip">Julia</span></dd>
+      <div>
+        <p class="eyebrow">Toolkit</p>
+        <dl class="kit">
+          <dt>Programming</dt>
+          <dd><span class="chip">Python</span><span class="chip">C / C++</span><span class="chip">MATLAB</span><span class="chip">Julia</span></dd>
 
-        <dt>Robotics &amp; hardware</dt>
-        <dd>
-          <span class="chip">ROS2</span><span class="chip">Gazebo</span><span class="chip">MuJoCo</span>
-          <span class="chip">Pinocchio</span><span class="chip">Crazyflie</span><span class="chip">Simscape Multibody</span>
-          <span class="chip">Arduino &amp; embedded MCUs</span><span class="chip">Load-cell / sensor integration</span>
-          <span class="chip">OpenVSP</span>
-        </dd>
+          <dt>Robotics &amp; hardware</dt>
+          <dd>
+            <span class="chip">ROS2</span><span class="chip">Gazebo</span><span class="chip">MuJoCo</span>
+            <span class="chip">Pinocchio</span><span class="chip">Crazyflie</span><span class="chip">Simscape Multibody</span>
+            <span class="chip">Arduino &amp; embedded MCUs</span><span class="chip">Load-cell / sensor integration</span>
+            <span class="chip">OpenVSP</span>
+          </dd>
 
-        <dt>Optimisation &amp; control</dt>
-        <dd>
-          <span class="chip">CVX</span><span class="chip">IPOPT</span><span class="chip">LMI / SDP synthesis</span>
-          <span class="chip">Model predictive control</span><span class="chip">Pseudospectral methods</span>
-          <span class="chip wip">CasADi</span><span class="chip wip">PyTorch</span>
-        </dd>
+          <dt>Optimisation &amp; control</dt>
+          <dd>
+            <span class="chip">CVX</span><span class="chip">IPOPT</span><span class="chip">LMI / SDP synthesis</span>
+            <span class="chip">Model predictive control</span><span class="chip">Pseudospectral methods</span>
+            <span class="chip wip">CasADi</span><span class="chip wip">PyTorch</span>
+          </dd>
+        </dl>
         <p class="wipnote">Dashed = in progress through coursework.</p>
-      </dl>
+      </div>
 
       <div>
+        <p class="eyebrow">Awards</p>
         <ul class="awards">
           <li><span class="yr">2025–26</span><span>Aerospace Engineering Department Fellowship for Outstanding Academic and Research Achievement, UIUC</span></li>
           <li><span class="yr">2025</span><span>Stillwell Fellowship, Department of Aerospace Engineering, UIUC</span></li>
