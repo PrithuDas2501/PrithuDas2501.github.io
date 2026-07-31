@@ -160,15 +160,18 @@ a{ color:inherit; }
 }
 .portrait figcaption .where{ margin-left:auto; opacity:.75; }
 
-/* shown only if portrait.jpg is missing */
+/* shown only if no image file could be found */
 .portrait .missing{
-  display:none; aspect-ratio:4/5; padding:28px;
-  flex-direction:column; justify-content:flex-end; gap:8px;
-  font-family:var(--mono); font-size:12.5px; line-height:1.7; color:var(--muted-d);
+  display:none; aspect-ratio:4/5; padding:26px; overflow:auto;
+  flex-direction:column; justify-content:center; gap:14px;
+  font-family:var(--mono); font-size:12px; line-height:1.65; color:var(--muted-d);
   background:repeating-linear-gradient(45deg,#101216,#101216 10px,#14171C 10px,#14171C 20px);
 }
-.portrait .missing b{ color:#fff; font-weight:500; }
-.portrait .missing code{ color:var(--flux); }
+.portrait .missing b{ color:#fff; font-weight:500; display:block; font-size:13px; }
+.portrait .missing code{ color:var(--flux); word-break:break-all; }
+.portrait .missing ol{ margin:0; padding-left:18px; }
+.portrait .missing li{ margin-bottom:9px; }
+.portrait .missing .tried{ font-size:11px; opacity:.6; border-top:1px solid #262A31; padding-top:12px; }
 .portrait.no-image img{ display:none; }
 .portrait.no-image .missing{ display:flex; }
 
@@ -338,8 +341,13 @@ a{ color:inherit; }
           <img id="portrait-img" src="portrait.jpg"
                alt="Hrishav Das">
           <div class="missing">
-            <b>No photo yet.</b>
-            <span>Save your picture next to <code>index.html</code> and name it <code>portrait.jpg</code>, then refresh this page.</span>
+            <b>Can't find your photo.</b>
+            <ol>
+              <li>Is it really a JPG? Photos from an iPhone are often <code>.HEIC</code> with a <code>.jpg</code> name — browsers can't read those. Open it and re-save or export as JPEG or PNG.</li>
+              <li>Is it in the same folder as <code>index.html</code>? Not Downloads, not a subfolder.</li>
+              <li>Windows hides extensions, so <code>portrait.jpg</code> can secretly be <code>portrait.jpg.jpg</code>. Turn on "File name extensions" in Explorer's View menu and check.</li>
+            </ol>
+            <div class="tried" id="portrait-tried"></div>
           </div>
         </div>
         <figcaption>
@@ -703,14 +711,34 @@ a{ color:inherit; }
 </footer>
 
 <script>
-/* ---------- if portrait.jpg isn't there, show instructions instead ---------- */
+/* ---------- find the portrait, whatever it's called ----------
+   Tries each name in turn. Add your own filename to this list if you'd
+   rather not rename the file. Case matters once the site is hosted. */
 (function () {
   var img = document.getElementById('portrait-img');
   var fig = document.getElementById('portrait');
   if (!img || !fig) return;
-  function fail(){ fig.classList.add('no-image'); }
-  img.addEventListener('error', fail);
-  if (img.complete && img.naturalWidth === 0) fail();
+
+  var names = [
+    'portrait.jpg',  'portrait.jpeg', 'portrait.JPG',  'portrait.JPEG',
+    'portrait.png',  'portrait.PNG',  'portrait.webp', 'portrait.avif',
+    'photo.jpg',     'me.jpg'
+  ];
+  var i = 0;
+
+  function next(){
+    i++;
+    if (i < names.length){ img.src = names[i]; return; }
+    var folder = location.href.replace(/[^/]*$/, '');
+    var note = document.getElementById('portrait-tried');
+    if (note) note.textContent = 'Looked in ' + decodeURIComponent(folder) +
+      ' for: ' + names.join(', ');
+    fig.classList.add('no-image');
+  }
+
+  img.addEventListener('error', next);
+  img.src = names[0];
+  if (img.complete && img.naturalWidth === 0) next();
 })();
 
 /* ---------- quiet scroll reveal ---------- */
