@@ -379,6 +379,64 @@ a{ color:inherit; }
 .media.mini .todo{ padding:16px; font-size:11px; line-height:1.6; gap:6px; }
 
 /* ============================================================
+   FEATURED WALKTHROUGH  (the C.1 result, stepped through)
+   Steps run horizontally so the figure gets the full column width;
+   only one step is on screen at a time, so the section stays compact.
+   ============================================================ */
+.featured{ border:1px solid var(--rule); background:var(--paper-2); margin-top:clamp(20px,2.6vw,32px); }
+.feat-head{
+  display:flex; align-items:center; gap:10px 16px; flex-wrap:wrap;
+  padding:14px clamp(14px,2vw,22px); border-bottom:1px solid var(--rule);
+}
+.feat-head .lbl{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--muted);
+}
+.feat-steps{ display:flex; gap:6px; margin-left:auto; flex-wrap:wrap; }
+.feat-steps button{
+  font-family:var(--mono); font-size:11.5px; cursor:pointer;
+  background:none; border:1px solid var(--rule); color:var(--muted);
+  padding:5px 11px; border-radius:2px; line-height:1.3;
+}
+.feat-steps button:hover{ border-color:var(--muted); color:var(--ink); }
+.feat-steps button[aria-selected="true"]{
+  border-color:var(--flux); color:var(--flux); background:#fff;
+}
+@media (max-width:700px){
+  .feat-steps{ width:100%; margin-left:0; overflow-x:auto; flex-wrap:nowrap; padding-bottom:4px; }
+  .feat-steps button{ white-space:nowrap; }
+}
+
+.feat-body{ padding:clamp(14px,2vw,22px); }
+.fpanel{ display:none; }
+.fpanel.on{ display:block; animation:fade .3s ease; }
+.fstage{
+  background:#fff; border:1px solid var(--rule); border-radius:2px;
+  display:flex; align-items:center; justify-content:center;
+  padding:10px; margin-bottom:14px;
+}
+.fstage img, .fstage video{
+  width:100%; height:auto; max-height:62vh; object-fit:contain; display:block;
+}
+.fcap{ font-size:.95em; margin:0; max-width:78ch; color:var(--ink); }
+.fcap .step-no{
+  font-family:var(--mono); font-size:11px; color:var(--flux);
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+
+/* the timing table, typeset rather than screenshotted */
+.ttable{ border-collapse:collapse; font-family:var(--mono); font-size:13px; margin:0 auto; }
+.ttable caption{
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); padding-bottom:12px;
+}
+.ttable th, .ttable td{ padding:9px 18px; border-bottom:1px solid var(--rule); text-align:left; }
+.ttable th{ font-weight:500; color:var(--muted); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+.ttable td.num{ text-align:right; }
+.ttable tr.best td{ color:var(--flux); }
+.ttable tr:last-child td{ border-bottom:0; }
+
+/* ============================================================
    TOOLKIT + AWARDS
    ============================================================ */
 .two{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px,5vw,72px); }
@@ -552,19 +610,79 @@ a{ color:inherit; }
           <li>Currently extending the method to manipulators in cluttered environments, where over-conservative reachable set estimates are the primary bottleneck to finding feasible motion plans.</li>
         </ul>
       </div>
-        <figure class="media mini">
-          <div class="slot">
-              <img src="media/reach-1.jpg" alt="Reachable set warped along a direction of interest">
-              <img src="media/reach-2.jpg" alt="Reachable set warped along a direction of interest">
-              <div class="todo"><b>Add a figure</b><span><code></code></span></div>
+            </article>
+
+    <!-- ===== FEATURED: the C.1 result, stepped through =====
+         Media lives in the  media/  folder. To swap a figure, just change the
+         src. To add a step, copy one <button> and one <article class="fpanel">
+         and give them a matching id.
+         NOTE: the captions below are my reading of your plots — please correct
+         any that misstate the result before you send this anywhere. -->
+    <div class="featured" id="c1-walk">
+      <div class="feat-head">
+        <span class="lbl">C.1 · walkthrough</span>
+        <div class="feat-steps" role="tablist" aria-label="Reachable set results">
+          <button role="tab" aria-selected="true"  aria-controls="f1">1 · 2D</button>
+          <button role="tab" aria-selected="false" aria-controls="f2">2 · ADMIRE jet</button>
+          <button role="tab" aria-selected="false" aria-controls="f3">3 · Tightness</button>
+          <button role="tab" aria-selected="false" aria-controls="f4">4 · Compute time</button>
+          <button role="tab" aria-selected="false" aria-controls="f5">5 · Straight road</button>
+          <button role="tab" aria-selected="false" aria-controls="f6">6 · Curved road</button>
+        </div>
+      </div>
+
+      <div class="feat-body">
+
+        <article class="fpanel on" id="f1" role="tabpanel">
+          <div class="fstage"><img src="media/reach-1.png" alt="Reachable sets of a 2D system: nominal in red, optimized in green, propagated from the initial set X0 along the direction d."></div>
+          <p class="fcap"><span class="step-no">Step 1 — the idea in two dimensions</span>
+            Starting from the initial set X<sub>0</sub>, the reachable set is propagated forward in time. The optimized system (A*, B*), in green, is warped along the chosen direction <b>d</b> relative to the nominal system (A<sub>c</sub>, B<sub>c</sub>) in red — the same reachable states, described by a set that is stretched where it matters and tightened where it doesn't.</p>
+        </article>
+
+        <article class="fpanel" id="f2" role="tabpanel">
+          <div class="fstage"><img src="media/reach-2.png" alt="The same construction applied to the ADMIRE fighter jet model."></div>
+          <p class="fcap"><span class="step-no">Step 2 — scaling up: the ADMIRE fighter jet</span>
+            The same construction applied to the ADMIRE aircraft model, showing the method is not confined to toy two-state systems: nominal in red, optimized in green, again along the direction <b>d</b>.</p>
+        </article>
+
+        <article class="fpanel" id="f3" role="tabpanel">
+          <div class="fstage"><img src="media/reach-3.png" alt="Three reachable sets compared: the uncertain system in red, the nominal in grey, and the optimized in green."></div>
+          <div class="fstage"><img src="media/reach-4.png" alt="Reachable extent along the direction d over time for the three systems."></div>
+          <p class="fcap"><span class="step-no">Step 3 — tightness, against CORA</span>
+            Three systems overlaid: the uncertain system (A, B) in red, the nominal (A<sub>c</sub>, B<sub>c</sub>) in grey, and the optimized (A*, B*) in green. The uncertain system's set is the loosest — it has to account for everything the uncertainty admits — while the optimized set stays far closer to the nominal behaviour without giving up soundness.</p>
+        </article>
+
+        <article class="fpanel" id="f4" role="tabpanel">
+          <div class="fstage">
+            <table class="ttable">
+              <caption>Reach computation time</caption>
+              <thead><tr><th>System</th><th>Description</th><th class="num">Time</th></tr></thead>
+              <tbody>
+                <tr><td>(A, B)</td><td>uncertain</td><td class="num">0.399 s</td></tr>
+                <tr><td>(A<sub>c</sub>, B<sub>c</sub>)</td><td>nominal</td><td class="num">0.140 s</td></tr>
+                <tr class="best"><td>(A*, B*)</td><td>optimized</td><td class="num">0.155 s</td></tr>
+              </tbody>
+            </table>
           </div>
-          <figcaption>
-            <span class="cap">Warped vs. standard reachable set</span>
-            <span class="counter"></span>
-            <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
-          </figcaption>
-        </figure>
-    </article>
+          <p class="fcap"><span class="step-no">Step 4 — what it costs</span>
+            The optimized system computes its reachable set in roughly the time the nominal system takes, and about <b>2.6× faster</b> than propagating the uncertain system directly — so the tighter set does not have to be paid for in computation.</p>
+        </article>
+
+        <article class="fpanel" id="f5" role="tabpanel">
+          <div class="fstage"><video muted loop playsinline preload="metadata" aria-label="Reachable sets propagating along a straight road, optimized in green over nominal in red."><source src="media/road-straight.webm" type="video/webm"><source src="media/road-straight.mp4" type="video/mp4"></video></div>
+          <p class="fcap"><span class="step-no">Step 5 — straight road</span>
+            The two sets overlaid on the same scenario as the vehicle advances. Where the green set is tighter than the red, a planner has room it would otherwise have had to refuse — which is what makes a manoeuvre feasible instead of merely conservative.</p>
+        </article>
+
+        <article class="fpanel" id="f6" role="tabpanel">
+          <div class="fstage"><video muted loop playsinline preload="metadata" aria-label="Reachable sets propagating along a curved road, optimized in green over nominal in red."><source src="media/road-curved.webm" type="video/webm"><source src="media/road-curved.mp4" type="video/mp4"></video></div>
+          <p class="fcap"><span class="step-no">Step 6 — curved road</span>
+            The harder case. Curvature is where conservative reachable set estimates bite hardest, since the set has to cover a turning trajectory over the whole horizon.</p>
+        </article>
+
+      </div>
+    </div>
+
 
     <article class="thread">
       <div class="side">
@@ -768,7 +886,7 @@ a{ color:inherit; }
         <li><button role="tab" aria-selected="false" aria-controls="p-agv"><span class="t">Autonomous Ground Vehicle</span><span class="d">2022 · Team Abhiyaan</span></button></li>
         <li><button role="tab" aria-selected="false" aria-controls="p-ta"><span class="t">Autonomous Systems Lab</span><span class="d">Fall 2026 · Teaching</span></button></li>
         <li class="grp">Simulation Only</li>
-        <li><button role="tab" aria-selected="false" aria-controls="p-mpc"><span class="t">Tube-Based MPC for Manipulators</span><span class="d">2025 · UIUC</span></button></li>
+        <li><button role="tab" aria-selected="false" aria-controls="p-mpc"><span class="t">Tube-Based MPC for Manipulators</span><span class="d">2025</span></button></li>
         <li><button role="tab" aria-selected="false" aria-controls="p-pnpp"><span class="t">Modified PN and PP Guidance</span><span class="d">2024 · IIT Madras</span></button></li>
         <li><button role="tab" aria-selected="false" aria-controls="p-attitude"><span class="t">Spacecraft Attitude Control</span><span class="d">2024 · IIT Madras</span></button></li>
       </ul>
@@ -1189,6 +1307,40 @@ a{ color:inherit; }
       vis[nxt].style.display = 'block';
       var c = fig.querySelector('.counter');
       if (c) c.textContent = (nxt + 1) + ' / ' + vis.length;
+    });
+  });
+})();
+
+/* ---------- featured walkthrough ----------
+   Only the open step's video plays; the rest stay paused so the page
+   doesn't decode four videos at once. */
+(function () {
+  var box = document.getElementById('c1-walk');
+  if (!box) return;
+  var tabs = Array.prototype.slice.call(box.querySelectorAll('.feat-steps button'));
+
+  function show(idx){
+    tabs.forEach(function (t, k){
+      var on = k === idx;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      var p = document.getElementById(t.getAttribute('aria-controls'));
+      if (!p) return;
+      p.classList.toggle('on', on);
+      p.querySelectorAll('video').forEach(function (v){
+        if (on){ var q = v.play(); if (q && q.catch) q.catch(function(){}); }
+        else { try { v.pause(); v.currentTime = 0; } catch(e){} }
+      });
+    });
+  }
+
+  tabs.forEach(function (t, k){
+    t.addEventListener('click', function (){ show(k); });
+    t.addEventListener('keydown', function (e){
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      var n = (k + d + tabs.length) % tabs.length;
+      tabs[n].focus(); show(n);
     });
   });
 })();
