@@ -396,7 +396,7 @@ a{ color:inherit; }
 .slide.on{ display:block; animation:fade .28s ease; }
 .frame{
   background:#fff;
-  aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+  aspect-ratio:4/3; display:flex; align-items:center; justify-content:center;
   padding:10px; overflow:hidden;
 }
 .frame a.zoom{ display:flex; align-items:center; justify-content:center; max-width:100%; max-height:100%; }
@@ -624,7 +624,7 @@ a{ color:inherit; }
             <div class="frame"><a class="zoom" href="media/reach-1.png" target="_blank" rel="noopener" title="Open full size"><img src="media/reach-1.png" alt="Reachable sets of a 2D system, nominal in red and optimized in green."></a></div>
           </div>
           <div class="slide" data-title="ADMIRE fighter jet">
-            <div class="frame"><a class="zoom" href="media/reach-2.png" target="_blank" rel="noopener" title="Open full size"><img src="media/reach-2.png" alt="The same construction applied to the ADMIRE fighter jet model."></a></div>
+            <div class="frame"><a class="zoom" href="media/reach-2.png" target="_blank" rel="noopener" title="Open full size"><img src="media/reach-2.png" alt="The construction applied to the ADMIRE fighter jet model."></a></div>
           </div>
           <div class="slide" data-title="Tightness vs. CORA">
             <div class="frame"><a class="zoom" href="media/reach-3.png" target="_blank" rel="noopener" title="Open full size"><img src="media/reach-3.png" alt="Three reachable sets: uncertain in red, nominal in grey, optimized in green."></a></div>
@@ -635,11 +635,17 @@ a{ color:inherit; }
           <div class="slide" data-title="Compute time">
             <div class="frame"><table class="ttable"><caption>Reach computation time</caption><thead><tr><th>System</th><th>Description</th><th class="num">Time</th></tr></thead><tbody><tr><td>(A, B)</td><td>uncertain</td><td class="num">0.399 s</td></tr><tr><td>(A<sub>c</sub>, B<sub>c</sub>)</td><td>nominal</td><td class="num">0.140 s</td></tr><tr class="best"><td>(A*, B*)</td><td>optimized</td><td class="num">0.155 s</td></tr></tbody></table></div>
           </div>
-          <div class="slide" data-title="Straight road">
-            <div class="frame"><video muted loop playsinline preload="none" aria-label="Reachable sets along a straight road, optimized green over nominal red."><source src="media/road-straight.webm" type="video/webm"><source src="media/road-straight.mp4" type="video/mp4"></video></div>
+          <div class="slide" data-title="Straight road, standard reach">
+            <div class="frame"><a class="zoom" href="media/road-straight-red.png" target="_blank" rel="noopener" title="Open full size"><img src="media/road-straight-red.png" alt="Straight road: the standard reachable set blocks the corridor and the ego vehicle must wait."></a></div>
           </div>
-          <div class="slide" data-title="Curved road">
-            <div class="frame"><video muted loop playsinline preload="none" aria-label="Reachable sets along a curved road, optimized green over nominal red."><source src="media/road-curved.webm" type="video/webm"><source src="media/road-curved.mp4" type="video/mp4"></video></div>
+          <div class="slide" data-title="Straight road, directional">
+            <div class="frame"><a class="zoom" href="media/road-straight-green.png" target="_blank" rel="noopener" title="Open full size"><img src="media/road-straight-green.png" alt="Straight road: the tighter directional set leaves room and the ego vehicle overtakes."></a></div>
+          </div>
+          <div class="slide" data-title="Curved road, standard reach">
+            <div class="frame"><a class="zoom" href="media/road-curved-red.png" target="_blank" rel="noopener" title="Open full size"><img src="media/road-curved-red.png" alt="Curved road: the standard reachable set blocks the corridor."></a></div>
+          </div>
+          <div class="slide" data-title="Curved road, directional">
+            <div class="frame"><a class="zoom" href="media/road-curved-green.png" target="_blank" rel="noopener" title="Open full size"><img src="media/road-curved-green.png" alt="Curved road: the tighter directional set leaves room to overtake."></a></div>
           </div>
         </div>
         <div class="sbar">
@@ -650,8 +656,10 @@ a{ color:inherit; }
             <button type="button" class="dot" data-go="2" aria-label="Tightness vs. CORA"></button>
             <button type="button" class="dot" data-go="3" aria-label="Extent along d"></button>
             <button type="button" class="dot" data-go="4" aria-label="Compute time"></button>
-            <button type="button" class="dot" data-go="5" aria-label="Straight road"></button>
-            <button type="button" class="dot" data-go="6" aria-label="Curved road"></button>
+            <button type="button" class="dot" data-go="5" aria-label="Straight road, standard reach"></button>
+            <button type="button" class="dot" data-go="6" aria-label="Straight road, directional"></button>
+            <button type="button" class="dot" data-go="7" aria-label="Curved road, standard reach"></button>
+            <button type="button" class="dot" data-go="8" aria-label="Curved road, directional"></button>
           </div>
           <button type="button" class="arw" data-step="1" aria-label="Next slide">→</button>
           <span class="scount"></span>
