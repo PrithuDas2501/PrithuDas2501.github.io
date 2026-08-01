@@ -199,13 +199,23 @@ a{ color:inherit; }
 /* ============================================================
    RESEARCH THREADS
    ============================================================ */
+/* three columns on desktop: meta | text | figure.
+   Putting the figure beside the bullets rather than under them means the
+   research section gains almost no extra height. */
 .thread{
-  display:grid; grid-template-columns:190px 1fr;
-  gap:clamp(16px,3vw,40px);
+  display:grid; grid-template-columns:170px minmax(0,1fr) 290px;
+  gap:clamp(16px,2.4vw,34px);
   padding:clamp(22px,2.6vw,32px) 0; border-top:1px solid var(--rule);
+  align-items:start;
 }
 .thread:last-child{ border-bottom:1px solid var(--rule); }
-@media (max-width:760px){ .thread{ grid-template-columns:1fr; gap:10px; } }
+
+/* medium screens: figure drops below the text, capped so it isn't huge */
+@media (max-width:1080px){
+  .thread{ grid-template-columns:190px minmax(0,1fr); }
+  .thread .media{ grid-column:1 / -1; max-width:520px; margin-top:4px; }
+}
+@media (max-width:760px){ .thread{ grid-template-columns:1fr; gap:12px; } }
 
 .thread .side{ font-family:var(--mono); font-size:12px; color:var(--muted); line-height:1.7; }
 .thread .side .tag{
@@ -342,6 +352,13 @@ a{ color:inherit; }
 }
 .media .nav-btns button:hover{ border-color:var(--flux); color:var(--flux); }
 .media.single .nav-btns, .media.single .counter{ display:none; }
+
+/* --- compact variant, used in the research section --- */
+.media.mini{ margin:0; }
+.media.mini .slot{ aspect-ratio:4/3; }
+.media.mini figcaption{ padding:7px 9px; font-size:10px; gap:8px; }
+.media.mini .nav-btns button{ padding:3px 7px; font-size:11px; }
+.media.mini .todo{ padding:16px; font-size:11px; line-height:1.6; gap:6px; }
 
 /* ============================================================
    TOOLKIT + AWARDS
@@ -520,6 +537,18 @@ a{ color:inherit; }
           <li>Currently extending the method to manipulators in cluttered environments, where over-conservative reachable set estimates are the primary bottleneck to finding feasible motion plans.</li>
         </ul>
       </div>
+        <figure class="media mini">
+          <div class="slot">
+              <img src="media/reach-1.jpg" alt="Reachable set warped along a direction of interest">
+              <img src="media/reach-2.jpg" alt="Reachable set warped along a direction of interest">
+              <div class="todo"><b>Add a figure</b><span><code></code></span></div>
+          </div>
+          <figcaption>
+            <span class="cap">Warped vs. standard reachable set</span>
+            <span class="counter"></span>
+            <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+          </figcaption>
+        </figure>
     </article>
 
     <article class="thread">
@@ -537,6 +566,17 @@ a{ color:inherit; }
           <li>Surveyed 25+ works on obstacle avoidance and perception-aware navigation, with emphasis on real-time, sensor-driven methods suitable for onboard deployment.</li>
         </ul>
       </div>
+        <figure class="media mini">
+          <div class="slot">
+              <img src="media/flow-1.jpg" alt="Streamlines around an ellipsoidal obstacle">
+              <div class="todo"><b>Add a figure</b><span><code></code></span></div>
+          </div>
+          <figcaption>
+            <span class="cap">Streamlines around an ellipsoidal obstacle</span>
+            <span class="counter"></span>
+            <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+          </figcaption>
+        </figure>
     </article>
 
     <article class="thread">
@@ -553,6 +593,17 @@ a{ color:inherit; }
           <li>Improved tracking by over 20% against the conventional constant look-ahead-distance scheme. Begun as an independent course project and developed into a conference publication.</li>
         </ul>
       </div>
+        <figure class="media mini">
+          <div class="slot">
+              <img src="media/guidance-1.jpg" alt="Path-following tracking comparison">
+              <div class="todo"><b>Add a figure</b><span><code></code></span></div>
+          </div>
+          <figcaption>
+            <span class="cap">Tracking against a curved reference path</span>
+            <span class="counter"></span>
+            <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+          </figcaption>
+        </figure>
     </article>
 
     <article class="thread">
@@ -570,6 +621,17 @@ a{ color:inherit; }
           <li>Designed an LMI-based full-state feedback controller minimising the H<sub>∞</sub> norm under actuator deflection constraints, then validated gust rejection in Simulink on two 6-DOF flying-wing models driven by interpolated aerodynamic data.</li>
         </ul>
       </div>
+        <figure class="media mini">
+          <div class="slot">
+              <img src="media/actuator-1.jpg" alt="Degradation limits for F-16 control surfaces">
+              <div class="todo"><b>Add a figure</b><span><code></code></span></div>
+          </div>
+          <figcaption>
+            <span class="cap">Performance–robustness tradeoff</span>
+            <span class="counter"></span>
+            <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+          </figcaption>
+        </figure>
     </article>
 
     <article class="thread">
@@ -586,6 +648,17 @@ a{ color:inherit; }
           <li>Simulated the full multi-agent engagement within the OCP framework, targeting successful evader capture.</li>
         </ul>
       </div>
+        <figure class="media mini">
+          <div class="slot">
+              <img src="media/pursuit-1.jpg" alt="Pursuit-evasion engagement trajectories">
+              <div class="todo"><b>Add a figure</b><span><code></code></span></div>
+          </div>
+          <figcaption>
+            <span class="cap">Two-agent engagement trajectories</span>
+            <span class="counter"></span>
+            <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+          </figcaption>
+        </figure>
     </article>
   </div>
 </section>
