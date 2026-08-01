@@ -112,6 +112,9 @@ a{ color:inherit; }
   gap:clamp(28px,4vw,56px); align-items:center;
 }
 @media (max-width:900px){ .hero-grid{ grid-template-columns:1fr; } }
+/* no portrait file → single column, no empty panel */
+.hero-grid.solo{ grid-template-columns:1fr; }
+.hero-grid.solo .portrait{ display:none; }
 
 .hero .kicker{
   font-family:var(--mono); font-size:11.5px; letter-spacing:.16em;
@@ -209,6 +212,9 @@ a{ color:inherit; }
   align-items:start;
 }
 .thread:last-child{ border-bottom:1px solid var(--rule); }
+
+/* no figure loaded → drop the third column so the text uses the full width */
+.thread.no-media{ grid-template-columns:170px minmax(0,1fr); }
 
 /* medium screens: figure drops below the text, capped so it isn't huge */
 @media (max-width:1080px){
@@ -320,11 +326,16 @@ a{ color:inherit; }
   border-top:1px dashed var(--rule); padding-top:12px; margin-top:16px;
 }
 
-/* --- the media frame: figures and videos live here --- */
+/* --- the media frame: figures and videos live here ---
+   IMPORTANT: frames are hidden by default and only revealed once a real
+   file has actually loaded. A project with no image simply shows no frame,
+   rather than an empty placeholder. */
 .media{
   position:relative; margin:0 0 20px; background:#101216;
   border:1px solid var(--rule); border-radius:2px; overflow:hidden;
+  display:none;
 }
+.media.ready{ display:block; }
 .media .slot{ position:relative; aspect-ratio:16/9; }
 .media .slot > img,
 .media .slot > video{
@@ -1058,10 +1069,18 @@ a{ color:inherit; }
   function next(){
     i++;
     if (i < names.length){ img.src = names[i]; return; }
+    /* Nothing loaded. Hide the whole block rather than showing a visitor an
+       empty frame, and put the diagnosis in the browser console instead
+       (right-click → Inspect → Console to read it). */
     var folder = location.href.replace(/[^/]*$/, '');
+    var msg = 'No portrait found. Looked in ' + decodeURIComponent(folder) +
+              ' for: ' + names.join(', ');
     var note = document.getElementById('portrait-tried');
-    if (note) note.textContent = 'Looked in ' + decodeURIComponent(folder) + ' for: ' + names.join(', ');
+    if (note) note.textContent = msg;
+    console.warn(msg);
     fig.classList.add('no-image');
+    var grid = fig.closest('.hero-grid');
+    if (grid) grid.classList.add('solo');
   }
 
   img.addEventListener('error', next);
@@ -1099,29 +1118,45 @@ a{ color:inherit; }
   });
 })();
 
-/* ---------- media frames: missing-file placeholder + arrows ---------- */
+/* ---------- media frames ----------
+   A frame stays hidden until at least one of its files actually loads, so an
+   unfinished project shows no empty box. Flip SHOW_PLACEHOLDERS to true while
+   you're assembling images and the striped "add a figure here" panels come
+   back, which makes it easy to see the filenames each slot expects. */
 (function () {
+  var SHOW_PLACEHOLDERS = false;
+
   document.querySelectorAll('.media').forEach(function (fig){
-    var slot   = fig.querySelector('.slot');
-    var todo   = slot.querySelector('.todo');
-    var counter= fig.querySelector('.counter');
-    var frames = Array.prototype.slice.call(slot.querySelectorAll('img, video'));
-    var live   = [];          // frames whose file actually loaded
-    var at     = 0;
+    var slot    = fig.querySelector('.slot');
+    var todo    = slot.querySelector('.todo');
+    var counter = fig.querySelector('.counter');
+    var frames  = Array.prototype.slice.call(slot.querySelectorAll('img, video'));
+    var thread  = fig.closest('.thread');
+    var live    = [];       // frames whose file actually loaded
+    var pending = frames.length;
+    var at      = 0;
 
     /* name the missing file in the placeholder */
-    var firstName = frames.length ? frames[0].getAttribute('src') : '';
     var code = todo && todo.querySelector('code');
-    if (code) code.textContent = firstName;
+    if (code && frames.length) code.textContent = frames[0].getAttribute('src');
 
     function render(){
       frames.forEach(function (f){ f.style.display = 'none'; });
+
       if (!live.length){
-        slot.classList.add('empty');
-        fig.classList.add('single');
+        if (SHOW_PLACEHOLDERS && !pending){
+          slot.classList.add('empty');
+          fig.classList.add('ready', 'single');
+        } else {
+          fig.classList.remove('ready');
+          if (thread && !pending) thread.classList.add('no-media');
+        }
         return;
       }
+
       slot.classList.remove('empty');
+      fig.classList.add('ready');
+      if (thread) thread.classList.remove('no-media');
       if (at >= live.length) at = 0;
       if (at < 0) at = live.length - 1;
       live[at].style.display = 'block';
@@ -1129,9 +1164,14 @@ a{ color:inherit; }
       if (counter) counter.textContent = live.length > 1 ? (at + 1) + ' / ' + live.length : '';
     }
 
+    if (!frames.length){ render(); return; }
+
     frames.forEach(function (f){
-      function ok(){ if (live.indexOf(f) === -1){ live.push(f); render(); } }
-      function bad(){ f.remove(); render(); }
+      var settled = false;
+      function done(){ if (!settled){ settled = true; pending--; } }
+      function ok(){ done(); if (live.indexOf(f) === -1) live.push(f); render(); }
+      function bad(){ done(); f.remove(); render(); }
+
       f.addEventListener('error', bad);
       if (f.tagName === 'IMG'){
         if (f.complete){ f.naturalWidth ? ok() : bad(); }
@@ -1141,12 +1181,20 @@ a{ color:inherit; }
       }
     });
     render();
+  });
 
-    fig.querySelectorAll('.nav-btns button').forEach(function (b){
-      b.addEventListener('click', function (){
-        at += parseInt(b.getAttribute('data-step'), 10);
-        render();
-      });
+  /* arrows */
+  document.querySelectorAll('.media .nav-btns button').forEach(function (b){
+    b.addEventListener('click', function (){
+      var fig = b.closest('.media');
+      var vis = Array.prototype.slice.call(fig.querySelectorAll('.slot img, .slot video'));
+      if (vis.length < 2) return;
+      var cur = vis.findIndex(function (f){ return f.style.display === 'block'; });
+      var nxt = (cur + parseInt(b.getAttribute('data-step'), 10) + vis.length) % vis.length;
+      vis.forEach(function (f){ f.style.display = 'none'; });
+      vis[nxt].style.display = 'block';
+      var c = fig.querySelector('.counter');
+      if (c) c.textContent = (nxt + 1) + ' / ' + vis.length;
     });
   });
 })();
