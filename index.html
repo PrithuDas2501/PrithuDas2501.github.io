@@ -15,15 +15,15 @@
    TOKENS  — change colours and fonts here, they cascade everywhere
    ============================================================ */
 :root{
-  --ink:      #14161A;   /* darkest — hero, footer, body text     */
-  --ink-soft: #1E2127;   /* raised panels on the dark sections     */
-  --paper:    #E9EBEA;   /* page background, a cool bone           */
-  --paper-2:  #F2F3F2;   /* cards on paper                         */
-  --rule:     #C7CCC9;   /* hairlines                              */
-  --muted:    #5B615F;   /* secondary text on paper                */
-  --muted-d:  #8A918F;   /* secondary text on ink                  */
-  --flux:     #D81E5B;   /* the accent — links, markers, rules     */
-  --trace:    #7FD3E6;   /* second data colour, dark surfaces only */
+  --ink:      #14161A;
+  --ink-soft: #1E2127;
+  --paper:    #E9EBEA;
+  --paper-2:  #F2F3F2;
+  --rule:     #C7CCC9;
+  --muted:    #5B615F;
+  --muted-d:  #8A918F;
+  --flux:     #D81E5B;
+  --trace:    #7FD3E6;
 
   --display: "Archivo", system-ui, sans-serif;
   --body:    "Source Serif 4", Georgia, serif;
@@ -73,13 +73,18 @@ a{ color:inherit; }
   margin-left:auto;
 }
 
+/* small outbound link, used in research + projects */
+.slink{
+  font-family:var(--mono); font-size:11.5px; text-decoration:none;
+  color:var(--flux); border-bottom:1px solid transparent;
+  display:inline-block; white-space:nowrap;
+}
+.slink:hover, .slink:focus-visible{ border-bottom-color:var(--flux); }
+
 /* ============================================================
    NAV
    ============================================================ */
-.nav{
-  position:sticky; top:0; z-index:50;
-  background:var(--ink); color:#fff;
-}
+.nav{ position:sticky; top:0; z-index:50; background:var(--ink); color:#fff; }
 .nav-in{
   max-width:var(--wide); margin:0 auto; padding:0 var(--gut);
   height:52px; display:flex; align-items:center; gap:8px;
@@ -89,10 +94,7 @@ a{ color:inherit; }
   font-size:16px; text-decoration:none;
 }
 .mark span{ color:var(--flux); }
-.nav ul{
-  list-style:none; display:flex; gap:clamp(12px,2vw,26px);
-  margin:0 0 0 auto; padding:0;
-}
+.nav ul{ list-style:none; display:flex; gap:clamp(12px,2vw,26px); margin:0 0 0 auto; padding:0; }
 .nav a.jump{
   font-family:var(--mono); font-size:12px; letter-spacing:.04em;
   color:var(--muted-d); text-decoration:none;
@@ -120,8 +122,6 @@ a{ color:inherit; }
   font-size:clamp(46px,7.6vw,92px); line-height:.92; letter-spacing:-.035em;
   margin:0 0 22px;
 }
-/* max-width widened to 50ch — a full intro paragraph needs a longer line
-   than the short one-liner this originally held. */
 .hero .thesis{
   font-size:clamp(16.5px,1.32vw,19px); line-height:1.55;
   color:#E4E6E6; max-width:50ch; margin:0 0 28px;
@@ -145,7 +145,7 @@ a{ color:inherit; }
   position:relative; overflow:hidden; border-radius:2px;
   border:1px solid #2A2F36; background:#101216;
 }
-.portrait .plate::after{           /* registration corner, drawn over the image */
+.portrait .plate::after{
   content:""; position:absolute; inset:0 auto auto 0; width:38px; height:38px;
   border-left:2px solid var(--flux); border-top:2px solid var(--flux);
   pointer-events:none;
@@ -161,7 +161,6 @@ a{ color:inherit; }
 }
 .portrait figcaption .where{ margin-left:auto; opacity:.75; }
 
-/* shown only if no image file could be found */
 .portrait .missing{
   display:none; aspect-ratio:4/5; padding:26px; overflow:auto;
   flex-direction:column; justify-content:center; gap:14px;
@@ -213,6 +212,7 @@ a{ color:inherit; }
   display:inline-block; color:var(--flux); border:1px solid var(--flux);
   border-radius:2px; padding:1px 6px; font-size:11px; margin-bottom:8px;
 }
+.thread .side .slink{ margin-top:8px; }
 .thread h3{
   font-family:var(--display); font-weight:700; letter-spacing:-.015em;
   font-size:clamp(19px,2vw,25px); line-height:1.2; margin:0 0 10px;
@@ -224,7 +224,7 @@ a{ color:inherit; }
 /* ============================================================
    PUBLICATIONS
    ============================================================ */
-.pubs{ list-style:none; margin:0; padding:0; counter-reset:none; }
+.pubs{ list-style:none; margin:0; padding:0; }
 .pubs li{
   display:grid; grid-template-columns:64px 1fr; gap:clamp(12px,2vw,28px);
   padding:18px 0; border-top:1px solid var(--rule);
@@ -239,17 +239,109 @@ a{ color:inherit; }
 .legend{ font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-top:14px; }
 
 /* ============================================================
-   HARDWARE CARDS
+   ADDITIONAL PROJECTS — switcher
+   One project visible at a time, so the page height stays fixed no matter
+   how many projects you add later.
    ============================================================ */
-.cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule); }
-.card{ background:var(--paper-2); padding:clamp(20px,2.4vw,28px); }
-.card .when{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
-.card h3{ font-family:var(--display); font-weight:700; font-size:19px; letter-spacing:-.01em; line-height:1.22; margin:8px 0 4px; }
-.card .role{ font-family:var(--mono); font-size:12px; color:var(--flux); margin:0 0 12px; }
-.card p{ margin:0 0 10px; font-size:.96em; }
-.card p:last-child{ margin-bottom:0; }
-.card .stat{ font-family:var(--mono); font-size:12px; color:var(--muted); border-top:1px dashed var(--rule); padding-top:10px; margin-top:12px; }
-.card.upcoming{ background:#EDE4E8; }
+.showcase{ display:grid; grid-template-columns:280px 1fr; gap:clamp(20px,3vw,44px); align-items:start; }
+@media (max-width:900px){ .showcase{ grid-template-columns:1fr; gap:18px; } }
+
+/* --- left: the list of projects --- */
+.proj-nav{ list-style:none; margin:0; padding:0; border-top:1px solid var(--rule); }
+.proj-nav li{ border-bottom:1px solid var(--rule); }
+.proj-nav button{
+  width:100%; text-align:left; background:none; cursor:pointer;
+  border:0; border-left:2px solid transparent;
+  padding:14px 12px; font-family:inherit; color:var(--muted);
+  display:block; transition:border-color .18s, color .18s, background .18s;
+}
+.proj-nav button:hover{ background:var(--paper-2); color:var(--ink); }
+.proj-nav button .t{
+  display:block; font-family:var(--display); font-weight:700;
+  font-size:15px; line-height:1.25; letter-spacing:-.01em;
+}
+.proj-nav button .d{
+  display:block; font-family:var(--mono); font-size:11px;
+  letter-spacing:.06em; text-transform:uppercase; margin-top:4px; opacity:.85;
+}
+.proj-nav button[aria-selected="true"]{
+  border-left-color:var(--flux); color:var(--ink); background:var(--paper-2);
+}
+.proj-nav button[aria-selected="true"] .d{ color:var(--flux); opacity:1; }
+
+@media (max-width:900px){
+  /* horizontal strip on small screens so it doesn't eat vertical space */
+  .proj-nav{ display:flex; gap:8px; overflow-x:auto; border:0; padding-bottom:6px; }
+  .proj-nav li{ border:0; flex:0 0 auto; }
+  .proj-nav button{
+    border:1px solid var(--rule); border-radius:2px; padding:8px 13px;
+    white-space:nowrap; background:var(--paper-2);
+  }
+  .proj-nav button .t{ font-size:13px; }
+  .proj-nav button .d{ display:none; }
+  .proj-nav button[aria-selected="true"]{ border-color:var(--flux); }
+}
+
+/* --- right: the open project --- */
+.proj-stage{ min-height:520px; }
+@media (max-width:900px){ .proj-stage{ min-height:0; } }
+.panel{ display:none; }
+.panel.on{ display:block; animation:fade .32s ease; }
+@keyframes fade{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:none; } }
+
+.panel-head{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+.panel-head h3{
+  font-family:var(--display); font-weight:700; letter-spacing:-.015em;
+  font-size:clamp(20px,2.1vw,26px); line-height:1.15; margin:0;
+}
+.panel-head .meta{ font-family:var(--mono); font-size:11.5px; color:var(--muted); }
+.panel-head .links{ margin-left:auto; display:flex; gap:14px; }
+.panel .role{ font-family:var(--mono); font-size:12px; color:var(--flux); margin:0 0 14px; }
+.panel p.body{ margin:0 0 12px; max-width:68ch; }
+.panel .stat{
+  font-family:var(--mono); font-size:12px; color:var(--muted);
+  border-top:1px dashed var(--rule); padding-top:12px; margin-top:16px;
+}
+
+/* --- the media frame: figures and videos live here --- */
+.media{
+  position:relative; margin:0 0 20px; background:#101216;
+  border:1px solid var(--rule); border-radius:2px; overflow:hidden;
+}
+.media .slot{ position:relative; aspect-ratio:16/9; }
+.media .slot > img,
+.media .slot > video{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.media .slot > img.contain, .media .slot > video.contain{ object-fit:contain; background:#101216; }
+
+/* placeholder shown when the media file isn't there yet */
+.media .slot .todo{
+  position:absolute; inset:0; display:none;
+  flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  text-align:center; padding:24px;
+  font-family:var(--mono); font-size:12px; line-height:1.7; color:var(--muted-d);
+  background:repeating-linear-gradient(45deg,#101216,#101216 10px,#14171C 10px,#14171C 20px);
+}
+.media .slot .todo b{ color:#fff; font-weight:500; }
+.media .slot .todo code{ color:var(--flux); }
+.media .slot.empty > img, .media .slot.empty > video{ display:none; }
+.media .slot.empty .todo{ display:flex; }
+
+/* caption + frame counter */
+.media figcaption{
+  display:flex; align-items:center; gap:12px;
+  padding:9px 12px; border-top:1px solid #262A31;
+  font-family:var(--mono); font-size:11px; color:var(--muted-d); background:#101216;
+}
+.media .nav-btns{ margin-left:auto; display:flex; gap:6px; }
+.media .nav-btns button{
+  background:none; border:1px solid #333840; color:var(--muted-d);
+  font-family:var(--mono); font-size:12px; line-height:1;
+  padding:5px 9px; border-radius:2px; cursor:pointer;
+}
+.media .nav-btns button:hover{ border-color:var(--flux); color:var(--flux); }
+.media.single .nav-btns, .media.single .counter{ display:none; }
 
 /* ============================================================
    TOOLKIT + AWARDS
@@ -261,18 +353,11 @@ a{ color:inherit; }
 .kit dt:first-child{ margin-top:0; }
 .kit dd{ margin:8px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px; }
 .chip{ font-family:var(--mono); font-size:12px; border:1px solid var(--rule); background:var(--paper-2); padding:3px 9px; border-radius:2px; }
-.chip.wip{ border-style:dashed; color:var(--muted); }
-.wipnote{ font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:16px; }
 
 .awards{ list-style:none; margin:0; padding:0; }
 .awards li{ padding:13px 0; border-bottom:1px solid var(--rule); display:flex; gap:14px; }
 .awards li:first-child{ border-top:1px solid var(--rule); }
 .awards .yr{ font-family:var(--mono); font-size:12px; color:var(--flux); flex:0 0 78px; padding-top:3px; }
-
-.projlist{ list-style:none; margin:26px 0 0; padding:0; }
-.projlist li{ padding:14px 0; border-top:1px solid var(--rule); }
-.projlist b{ font-family:var(--display); font-weight:700; font-size:16px; }
-.projlist .when{ font-family:var(--mono); font-size:11.5px; color:var(--muted); }
 
 /* ============================================================
    CONTACT / FOOTER
@@ -280,14 +365,14 @@ a{ color:inherit; }
 .foot{ background:var(--ink); color:#fff; padding:clamp(56px,7vw,96px) 0 40px; }
 .foot h2{ font-family:var(--display); font-weight:800; font-size:clamp(30px,5vw,58px); letter-spacing:-.03em; line-height:1; margin:0 0 26px; }
 .foot .say{ color:#D6D9D9; max-width:44ch; margin:0 0 32px; }
-.links{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:44px; }
-.links a{
+.links-row{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:44px; }
+.links-row a{
   font-family:var(--mono); font-size:13px; text-decoration:none;
   border:1px solid #333840; padding:9px 16px; border-radius:2px; color:#fff;
 }
-.links a:hover, .links a:focus-visible{ border-color:var(--flux); color:var(--flux); }
-.links a.primary{ background:var(--flux); border-color:var(--flux); }
-.links a.primary:hover{ background:transparent; color:var(--flux); }
+.links-row a:hover, .links-row a:focus-visible{ border-color:var(--flux); color:var(--flux); }
+.links-row a.primary{ background:var(--flux); border-color:var(--flux); }
+.links-row a.primary:hover{ background:transparent; color:var(--flux); }
 .colophon{ font-family:var(--mono); font-size:11px; color:var(--muted-d); border-top:1px solid #2C3037; padding-top:18px; display:flex; flex-wrap:wrap; gap:6px 20px; }
 
 /* ---------- reveal + a11y ---------- */
@@ -297,6 +382,7 @@ a{ color:inherit; }
 @media (prefers-reduced-motion:reduce){
   html{ scroll-behavior:auto; }
   .rise{ opacity:1; transform:none; transition:none; }
+  .panel.on{ animation:none; }
 }
 </style>
 </head>
@@ -310,7 +396,7 @@ a{ color:inherit; }
       <li><a class="jump" href="#about">about</a></li>
       <li><a class="jump" href="#research">research</a></li>
       <li><a class="jump" href="#publications">papers</a></li>
-      <li class="hide-s"><a class="jump" href="#hardware">hardware</a></li>
+      <li class="hide-s"><a class="jump" href="#projects">projects</a></li>
       <li class="hide-s"><a class="jump" href="#toolkit">toolkit</a></li>
       <li><a class="jump" href="#contact">contact</a></li>
     </ul>
@@ -333,12 +419,10 @@ a{ color:inherit; }
         </div>
       </div>
 
-      <!-- PHOTO: save your picture next to this file as  portrait.jpg
-           (or change the src below to whatever you name it). -->
+      <!-- PHOTO: save your picture next to this file as  portrait.jpg -->
       <figure class="portrait" id="portrait">
         <div class="plate">
-          <img id="portrait-img" src="portrait.jpg"
-               alt="Hrishav Das">
+          <img id="portrait-img" src="portrait.jpg" alt="Hrishav Das">
           <div class="missing">
             <b>Can't find your photo.</b>
             <ol>
@@ -375,20 +459,18 @@ a{ color:inherit; }
           I build control and planning methods for robots, and then I go and put them on the robot.
         </p>
         <p>
-          My PhD work at UIUC's LEADCAT Lab, with Prof. Melkior Ornik, is on reachability:
-          given a system's dynamics and its actuators, which states can it genuinely get to —
-          and how do you redesign the input so it reaches further in the one direction you care
-          about? The result is an algorithm that expands a linear system's reachable set with a
-          provable directional guarantee, by treating the set's boundary as the solution to a
-          family of time-optimal control problems. I'm now pushing those tools toward safe motion
-          planning and actuator allocation on real platforms.
+          My PhD work at UIUC's LEADCAT Lab, with Prof. Melkior Ornik, is on set-based reachability:
+          given a system's dynamics and its actuators, which states can it genuinely get to — and how
+          do you reshape that set so a planner isn't forced to be needlessly cautious? Conservative
+          reachable-set estimates are often what stops a robot from finding a feasible plan at all, so
+          the work is aimed squarely at making those estimates tighter and faster to compute.
         </p>
         <p>
           Before Illinois, I spent four years at IIT Madras, splitting my time between optimal
           control on paper and machines in a workshop: a drone-mounted robotic arm for
           reforestation that earned an Indian patent and was presented at the G20 Chennai summit, a coaxial
           rotor test stand wired for real-time thrust feedback, an autonomous ground vehicle for
-          IGVC, and a quadrotor position controller flown indoors at Inter-IIT.
+          IGVC, and a quadrotor flown indoors on nothing but its own camera feed.
         </p>
         <p>
           The through line is that I don't trust a method until it has failed physically at least
@@ -402,6 +484,7 @@ a{ color:inherit; }
         <div><dt>Lab</dt><dd>LEADCAT, Aerospace Engineering, UIUC</dd></div>
         <div><dt>Based in</dt><dd>Urbana, Illinois, USA</dd></div>
         <div><dt>Previously</dt><dd>B.Tech Aerospace Engineering,<br>IIT Madras </dd></div>
+        <div><dt>Interests</dt><dd>Reachability and set-based control · motion planning and trajectory optimization · model predictive control · reinforcement learning</dd></div>
         <div><dt>Fellowships</dt><dd>Stillwell Fellowship · Department Fellowship for Outstanding Academic and Research Achievement, AY 2025–26</dd></div>
         <div><dt>Elsewhere</dt><dd>
           <a href="https://scholar.google.com/citations?user=EYZZYAkAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a> ·
@@ -427,12 +510,14 @@ a{ color:inherit; }
         Aug 2025 — present<br>
         LEADCAT Lab, UIUC<br>
         Prof. Melkior Ornik
+        <a class="slink" href="https://github.com/PrithuDas2501/Matrix_Optimization_for_Better_Reachability_Computation/tree/main" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
       <div>
-        <h3>Input matrix optimisation for tunable reachable set expansion</h3>
+        <h3>Warping reachable sets for less conservative planning</h3>
         <ul>
-          <li>Built an algorithm that optimises a linear system's input matrix to expand its reachable set with a provable directional improvement, by treating reachable set boundaries as solutions to time-optimal control problems.</li>
-          <li>Current focus: extending these constrained-reachability tools toward safe motion planning and actuator allocation on physical robotic platforms.</li>
+          <li>Developed an algorithm that optimises the <i>A</i> and <i>B</i> matrices of a linear system to warp its reachable set along a chosen direction of interest, making reachable set computation faster and tighter for systems with uncertainty.</li>
+          <li>Showed the resulting sets admit substantially less conservative trajectory planning for autonomous vehicles across a range of road scenarios, permitting tighter and more aggressive manoeuvres than standard reachability-based planners.</li>
+          <li>Currently extending the method to manipulators in cluttered environments, where over-conservative reachable set estimates are the primary bottleneck to finding feasible motion plans.</li>
         </ul>
       </div>
     </article>
@@ -443,12 +528,13 @@ a{ color:inherit; }
         Dec 2023 — Aug 2024<br>
         Autonomous Vehicles Lab, IISc<br>
         Prof. Ashwini Ratnoo
+        <a class="slink" href="https://github.com/PrithuDas2501/Obstacle_Avoidance_Using_Streamlines/tree/main" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
       <div>
-        <h3>Perception-aware 3D obstacle avoidance from potential flow</h3>
+        <h3>Obstacle avoidance from potential flow</h3>
         <ul>
-          <li>Developed a real-time 3D avoidance law using the potential-flow structure around ellipsoidal obstacles, coupling geometry-based perception of obstacle boundaries with gain-scheduled trajectory adaptation; validated in MATLAB on a quadrotor model.</li>
-          <li>Surveyed 25+ works on obstacle avoidance and perception-aware navigation, focused on methods light enough to run onboard.</li>
+          <li>Developed a real-time 3D obstacle avoidance algorithm using the potential-flow structure around ellipsoidal obstacles, coupling geometry-based perception of obstacle boundaries with gain-scheduled trajectory adaptation; validated in MATLAB simulation on a quadrotor model.</li>
+          <li>Surveyed 25+ works on obstacle avoidance and perception-aware navigation, with emphasis on real-time, sensor-driven methods suitable for onboard deployment.</li>
         </ul>
       </div>
     </article>
@@ -464,7 +550,7 @@ a{ color:inherit; }
         <h3>Nonlinear path-following guidance with a corrector-aided look-ahead</h3>
         <ul>
           <li>Formulated an end-game guidance scheme for online, tight tracking of highly curved reference trajectories, plus a midcourse scheme that routes a distant UAV onto the path with near-optimal acceleration.</li>
-          <li>Improved tracking by over 20% against the conventional constant look-ahead-distance scheme.</li>
+          <li>Improved tracking by over 20% against the conventional constant look-ahead-distance scheme. Begun as an independent course project and developed into a conference publication.</li>
         </ul>
       </div>
     </article>
@@ -475,11 +561,12 @@ a{ color:inherit; }
         Apr 2023 — Dec 2024<br>
         Intelligent Systems Research Lab,<br>Texas A&amp;M University<br>
         Prof. Raktim Bhattacharya
+        <a class="slink" href="https://github.com/PrithuDas2501/Actuator_Degradation_CDC2024" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
       <div>
         <h3>How much actuator degradation can a controller absorb?</h3>
         <ul>
-          <li>Devised two LMI-based convex programs that maximise allowable actuator degradation subject to H<sub>2</sub>/H<sub>∞</sub> performance specifications; computed degradation limits for F-16 control surfaces and characterised the performance–robustness tradeoff.</li>
+          <li>Devised two LMI-based convex optimizations maximising allowable actuator degradation subject to H<sub>2</sub>/H<sub>∞</sub> performance specifications; computed degradation limits for F-16 control surfaces and characterised the performance–robustness tradeoff.</li>
           <li>Designed an LMI-based full-state feedback controller minimising the H<sub>∞</sub> norm under actuator deflection constraints, then validated gust rejection in Simulink on two 6-DOF flying-wing models driven by interpolated aerodynamic data.</li>
         </ul>
       </div>
@@ -495,8 +582,8 @@ a{ color:inherit; }
       <div>
         <h3>Pursuit–evasion by pseudospectral optimal control</h3>
         <ul>
-          <li>Cast two-agent pursuit–evasion as an optimal control problem solved with pseudospectral methods, extracting optimal inputs for both agents under a gamified-health metric that quantifies damage.</li>
-          <li>Simulated the full multi-agent engagement inside the OCP framework, targeting successful evader capture.</li>
+          <li>Formulated two-agent pursuit–evasion as a multi-agent optimal control problem solved with pseudospectral methods, extracting optimal inputs for both agents under a gamified-health metric quantifying damage.</li>
+          <li>Simulated the full multi-agent engagement within the OCP framework, targeting successful evader capture.</li>
         </ul>
       </div>
     </article>
@@ -517,7 +604,7 @@ a{ color:inherit; }
         <div>
           <span class="title">InMatOpt: Input Matrix Optimization for Tunable Reachable Set Expansion</span>
           <span class="authors"><span class="me">Hrishav Das</span>, Melkior Ornik</span>
-          <span class="venue">Conference on Decision and Control (CDC), Honolulu · Dec 2026 · <span class="status">accepted</span></span>
+          <span class="venue">Conference on Decision and Control (CDC), Honolulu · Dec 2026 · <span class="status">accepted</span> · <a class="slink" href="https://github.com/PrithuDas2501/Matrix_Optimization_for_Better_Reachability_Computation/tree/main" target="_blank" rel="noopener">code ↗</a></span>
         </div>
       </li>
       <li>
@@ -533,7 +620,7 @@ a{ color:inherit; }
         <div>
           <span class="title">3D Obstacle Avoidance using Potential Fluid Flow Inspired Guidance</span>
           <span class="authors"><span class="me">Hrishav Das</span>, Ashwini Ratnoo</span>
-          <span class="venue">AIAA SciTech Conference · 2025 · <span class="status">accepted</span></span>
+          <span class="venue">AIAA SciTech Conference · 2025 · <span class="status">accepted</span> · <a class="slink" href="https://github.com/PrithuDas2501/Obstacle_Avoidance_Using_Streamlines/tree/main" target="_blank" rel="noopener">code ↗</a></span>
         </div>
       </li>
       <li>
@@ -541,7 +628,7 @@ a{ color:inherit; }
         <div>
           <span class="title">Quantifying Maximum Actuator Degradation for a Given H<sub>2</sub>/H<sub>∞</sub> Performance with Full-State Feedback Control</span>
           <span class="authors"><span class="me">Hrishav Das</span>, Eliot Nychka, Raktim Bhattacharya</span>
-          <span class="venue">Conference on Decision and Control (CDC), Milan · Dec 2024 · <span class="status">accepted</span></span>
+          <span class="venue">Conference on Decision and Control (CDC), Milan · Dec 2024 · <span class="status">accepted</span> · <a class="slink" href="https://github.com/PrithuDas2501/Actuator_Degradation_CDC2024" target="_blank" rel="noopener">code ↗</a></span>
         </div>
       </li>
       <li>
@@ -557,7 +644,7 @@ a{ color:inherit; }
         <div>
           <span class="title">Mass Afforestation Drone: Drone-Mounted Robotic Arm</span>
           <span class="authors"><span class="me">Hrishav Das</span> et al.</span>
-          <span class="venue">Indian Patent Office · Patent No. 549953 · granted 2024</span>
+          <span class="venue">Indian Patent Office · Patent No. 549953 · granted 2024 · <a class="slink" href="https://ip.iitm.ac.in/technologies-portfolio/robotics-automation/idf-no-2491-mass-afforestation-drone-copy" target="_blank" rel="noopener">project page ↗</a></span>
         </div>
       </li>
     </ol>
@@ -565,79 +652,168 @@ a{ color:inherit; }
   </div>
 </section>
 
-<!-- ================= HARDWARE ================= -->
-<section class="band" id="hardware">
+<!-- ================= ADDITIONAL PROJECTS =================
+     HOW TO ADD MEDIA
+     Make a folder called  media  next to index.html, then drop your files in.
+     Each <img> below already points at the filename it wants — the placeholder
+     on screen tells you exactly which one is missing.
+
+     To use a VIDEO instead of an image, swap the <img ...> line for:
+        <video src="media/gaia-flight.mp4" autoplay muted loop playsinline></video>
+     To add ANOTHER frame to a project, just add one more <img> or <video>
+     inside the same <div class="slot"> — the arrows appear automatically.
+     If a figure gets cropped awkwardly, add  class="contain"  to that img.
+====================================================== -->
+<section class="band" id="projects">
   <div class="wrap rise">
     <div class="band-head">
-      <h2>Hardware</h2>
+      <h2>Additional Projects</h2>
       <span class="count">5 builds</span>
     </div>
 
-    <div class="cards">
+    <div class="showcase">
+      <ul class="proj-nav" id="proj-nav" role="tablist" aria-label="Projects">
+        <li><button role="tab" aria-selected="true"  aria-controls="p-gaia"><span class="t">Drone-Mounted Robotic Arm</span><span class="d">2022–23 · Team GAIA</span></button></li>
+        <li><button role="tab" aria-selected="false" aria-controls="p-vision"><span class="t">Vision-Based Drone Controller</span><span class="d">2022–23 · Inter-IIT</span></button></li>
+        <li><button role="tab" aria-selected="false" aria-controls="p-rotor"><span class="t">Coaxial Rotor Test Rig</span><span class="d">2024 · IIT Madras</span></button></li>
+        <li><button role="tab" aria-selected="false" aria-controls="p-agv"><span class="t">Autonomous Ground Vehicle</span><span class="d">2022 · Team Abhiyaan</span></button></li>
+        <li><button role="tab" aria-selected="false" aria-controls="p-ta"><span class="t">Autonomous Systems Lab</span><span class="d">Fall 2026 · Teaching</span></button></li>
+      </ul>
 
-      <!-- VERIFY BEFORE PUBLISHING: your CV flags the ROS2 detail below as unconfirmed
-           against the real lab stack. Edit or delete the phrase if it isn't right. -->
-      <article class="card upcoming">
-        <p class="when">Fall 2026 · upcoming</p>
-        <h3>Autonomous Systems Lab, UIUC</h3>
-        <p class="role">Teaching assistant — Crazyflie nano-quadrotors &amp; ROS2 ground robots</p>
-        <p>Designing and running hands-on lab sessions: hardware bring-up, radio and firmware configuration, sensor calibration, state estimation, and closed-loop flight experiments.</p>
-        <p>Guiding students through controller tuning and live debugging — including the failures that only ever appear on hardware.</p>
-      </article>
+      <div class="proj-stage">
 
-      <article class="card">
-        <p class="when">Apr 2022 — Mar 2023 · Team GAIA, CFI, IIT Madras</p>
-        <h3>Drone-mounted robotic arm for mass afforestation</h3>
-        <p class="role">Team lead — Indian Patent No. 549953</p>
-        <p>Recruited and led a 10-person cross-departmental team (AE / EE / ME) on a CFI-funded build, owning system integration end to end.</p>
-        <p>Designed, fabricated, and flight-tested an arm for remote seed-pod deployment: servo actuation, onboard microcontrollers, payload-release sensing, and repeated outdoor trials.</p>
-        <p class="stat">Demonstrated at the G20 Chennai summit and CFI Open House · 4th of 250+ teams, National Robotics Competition 2023 · US$1,000 budget</p>
-      </article>
+        <!-- ---------- GAIA ---------- -->
+        <article class="panel on" id="p-gaia" role="tabpanel">
+          <figure class="media">
+            <div class="slot">
+              <img src="media/gaia-1.jpg" alt="Drone-mounted robotic arm in flight">
+              <img src="media/gaia-2.jpg" alt="The robotic arm and seed-pod release mechanism">
+              <div class="todo"><b>Add a photo</b><span>Save it as <code></code></span></div>
+            </div>
+            <figcaption>
+              <span class="cap">Seed-pod deployment arm, flight trials</span>
+              <span class="counter"></span>
+              <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+            </figcaption>
+          </figure>
 
-      <article class="card">
-        <p class="when">Jan — Apr 2024 · IIT Madras</p>
-        <h3>Sensor-in-the-loop coaxial rotor test rig</h3>
-        <p class="role">Embedded control &amp; sensor integration</p>
-        <p>Built a test stand using load cells and microcontrollers for real-time thrust and RPM feedback across coaxial propeller pairs.</p>
-        <p>Implemented and tuned embedded PID on Arduino for closed-loop thrust regulation.</p>
-        <p class="stat">≈0.1% steady-state error across operating regimes</p>
-      </article>
+          <div class="panel-head">
+            <h3>Drone-Mounted Robotic Arm for Mass Afforestation</h3>
+            <span class="meta">Apr 2022 — Mar 2023</span>
+            <span class="links">
+              <a class="slink" href="https://ip.iitm.ac.in/technologies-portfolio/robotics-automation/idf-no-2491-mass-afforestation-drone-copy" target="_blank" rel="noopener">Project page ↗</a>
+            </span>
+          </div>
+          <p class="role">Team Lead · Team GAIA, CFI, IIT Madras · Indian Patent No. 549953</p>
+          <p class="body">Recruited and led a 10-member cross-departmental team (AE / EE / ME) on a CFI-funded build, owning system integration end to end.</p>
+          <p class="body">Designed, fabricated, and flight-tested a drone-mounted robotic arm for remote seed-pod deployment; integrated servo actuation, onboard microcontrollers, and payload-release sensing, and iterated through outdoor flight trials.</p>
+          <p class="stat">Demonstrated at the G20 Chennai summit and CFI Open House · 4th of 250+ teams, National Robotics Competition 2023 · US$1,000 budget</p>
+        </article>
 
-      <article class="card">
-        <p class="when">Dec 2022 — Feb 2023 · Inter-IIT Tech Meet</p>
-        <h3>Quadrotor position control on PlutoX</h3>
-        <p class="role">Team member</p>
-        <p>Implemented and tuned an outer-loop PID position controller through a Python wrapper around the PlutoX flight stack, validated in indoor flight tests.</p>
-        <p class="stat">Ranked 8th among 27 IITs</p>
-      </article>
+        <!-- ---------- VISION DRONE ---------- -->
+        <article class="panel" id="p-vision" role="tabpanel">
+          <figure class="media">
+            <div class="slot">
+              <img src="media/vision-1.jpg" alt="Vision-based drone controller in indoor flight">
+              <div class="todo"><b>Add a photo or flight video</b><span>Save it as <code></code></span></div>
+            </div>
+            <figcaption>
+              <span class="cap">Indoor flight, marker-driven state estimation</span>
+              <span class="counter"></span>
+              <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+            </figcaption>
+          </figure>
 
-      <article class="card">
-        <p class="when">Apr — Nov 2022 · Team Abhiyaan, IIT Madras</p>
-        <h3>Autonomous ground vehicle for IGVC</h3>
-        <p class="role">Mechanical module member</p>
-        <p>Designed and assembled a 70 × 40 × 100 cm three-wheeled autonomous ground robot for international autonomous vehicle competitions.</p>
-        <p class="stat">1st in Design and in Safety, IGVC 2023</p>
-      </article>
+          <div class="panel-head">
+            <h3>Vision-Based Drone Controller</h3>
+            <span class="meta">Dec 2022 — Feb 2023</span>
+            <span class="links">
+              <a class="slink" href="https://github.com/akshatnagar50/Vision-Based-Drone-Controller" target="_blank" rel="noopener">GitHub ↗</a>
+            </span>
+          </div>
+          <p class="role">Team Member · Inter-IIT Tech Meet</p>
+          <p class="body">Built a closed-loop drone controller driven entirely by the onboard video feed via marker detection, with no external motion capture or position sensing: vehicle state was estimated from the image and fed directly into the control loop.</p>
+          <p class="body">Implemented and tuned the full stack through a Python wrapper around the PlutoX flight firmware, then validated it in indoor flight tests.</p>
+          <p class="stat">Ranked 8th among 27 IITs</p>
+        </article>
 
+        <!-- ---------- ROTOR RIG ---------- -->
+        <article class="panel" id="p-rotor" role="tabpanel">
+          <figure class="media">
+            <div class="slot">
+              <img src="media/rotor-1.jpg" alt="Coaxial rotor test stand">
+              <div class="todo"><b>Add a photo of the rig</b><span>Save it as <code></code></span></div>
+            </div>
+            <figcaption>
+              <span class="cap">Load-cell test stand, coaxial propeller pair</span>
+              <span class="counter"></span>
+              <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+            </figcaption>
+          </figure>
+
+          <div class="panel-head">
+            <h3>Sensor-in-the-Loop Coaxial Rotor Test Rig</h3>
+            <span class="meta">Jan — Apr 2024</span>
+            <span class="links">
+              <a class="slink" href="https://github.com/PrithuDas2501/Coaxial_Rotor_Thrust_Control/tree/main" target="_blank" rel="noopener">GitHub ↗</a>
+            </span>
+          </div>
+          <p class="role">Embedded control and sensor integration · IIT Madras</p>
+          <p class="body">Built an experimental test stand using load cells and microcontrollers for real-time thrust and RPM feedback across coaxial propeller pairs.</p>
+          <p class="body">Implemented and tuned embedded PID control on Arduino for closed-loop thrust regulation.</p>
+          <p class="stat">≈0.1% steady-state error across operating regimes</p>
+        </article>
+
+        <!-- ---------- AGV ---------- -->
+        <article class="panel" id="p-agv" role="tabpanel">
+          <figure class="media">
+            <div class="slot">
+              <img src="media/agv-1.jpg" alt="Three-wheeled autonomous ground vehicle">
+              <div class="todo"><b>Add a photo of the vehicle</b><span>Save it as <code></code></span></div>
+            </div>
+            <figcaption>
+              <span class="cap">Three-wheeled AGV, IGVC build</span>
+              <span class="counter"></span>
+              <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+            </figcaption>
+          </figure>
+
+          <div class="panel-head">
+            <h3>Autonomous Ground Vehicle</h3>
+            <span class="meta">Apr — Nov 2022</span>
+          </div>
+          <p class="role">Mechanical Module Member · Team Abhiyaan, IIT Madras · IGVC</p>
+          <p class="body">Designed and assembled a 70 × 40 × 100 cm three-wheeled autonomous ground robot for international autonomous vehicle competitions.</p>
+          <p class="stat">1st in the Design and Safety categories, IGVC 2023</p>
+        </article>
+
+        <!-- ---------- TA ---------- -->
+        <!-- VERIFY BEFORE PUBLISHING: your CV still flags the ROS2 detail as unconfirmed
+             against the actual lab stack. Edit or delete the phrase if it isn't right. -->
+        <article class="panel" id="p-ta" role="tabpanel">
+          <figure class="media">
+            <div class="slot">
+              <img src="media/crazyflie-1.jpg" alt="Crazyflie nano-quadrotor lab session">
+              <div class="todo"><b>Nothing to show yet — this starts in Fall 2026</b><span>When it does, save a photo as <code></code></span></div>
+            </div>
+            <figcaption>
+              <span class="cap">Crazyflie nano-quadrotors and ground robots</span>
+              <span class="counter"></span>
+              <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+            </figcaption>
+          </figure>
+
+          <div class="panel-head">
+            <h3>Autonomous Systems Lab, UIUC</h3>
+            <span class="meta">Fall 2026 · upcoming</span>
+          </div>
+          <p class="role">Teaching Assistant · Crazyflie nano-quadrotors and ROS2 ground robots</p>
+          <p class="body">Selected to design and run hands-on laboratory sessions: hardware bring-up, radio and firmware configuration, sensor calibration, state estimation, and flight experiments.</p>
+          <p class="body">Guiding students through controller tuning and live debugging of physical experiments, including diagnosing failures that appear only on hardware and not in simulation.</p>
+        </article>
+
+      </div>
     </div>
-
-    <ul class="projlist">
-      <li>
-        <span class="when">Jan 2025 — present</span><br>
-        <b>Tube-based MPC for manipulator disturbance rejection</b><br>
-        Modelling multi-DOF manipulator dynamics in Pinocchio and implementing tube-based MPC to hold end-effector stability under base perturbations — aimed at the mobile-manipulation case where the base is itself a moving robot.
-      </li>
-      <li>
-        <span class="when">Jul — Nov 2024</span><br>
-        <b>Modified PN and PP guidance: replication and extensions</b><br>
-        Replicated <i>Performance and Lyapunov Stability of a Nonlinear Path-Following Guidance Method</i>, then extended it with dynamic scheduling of the look-ahead distance (L<sub>1</sub>) and multiple look-ahead points.
-      </li>
-      <li>
-        <span class="when">Jul — Nov 2024</span><br>
-        <b>Spacecraft attitude control with 3-axis reaction wheels</b><br>
-        Replicated <i>Inertia-Free Spacecraft Attitude Control Using Reaction Wheels</i>; found a singularity-related flaw in the control input computation at certain initial orientations.
-      </li>
-    </ul>
   </div>
 </section>
 
@@ -653,12 +829,13 @@ a{ color:inherit; }
         <p class="eyebrow">Toolkit</p>
         <dl class="kit">
           <dt>Programming</dt>
-          <dd><span class="chip">Python</span><span class="chip">C / C++</span><span class="chip">MATLAB</span><span class="chip">Julia</span></dd>
+          <dd><span class="chip">Python</span><span class="chip">MATLAB</span><span class="chip">C / C++</span><span class="chip">Julia</span></dd>
 
           <dt>Robotics &amp; hardware</dt>
           <dd>
             <span class="chip">ROS2</span><span class="chip">Gazebo</span><span class="chip">MuJoCo</span>
-            <span class="chip">Pinocchio</span><span class="chip">Crazyflie</span><span class="chip">Simscape Multibody</span>
+            <span class="chip">Pinocchio</span><span class="chip">Crazyflie</span><span class="chip">PlutoX</span>
+            <span class="chip">Simscape Multibody</span>
             <span class="chip">Arduino &amp; embedded MCUs</span><span class="chip">Load-cell / sensor integration</span>
             <span class="chip">OpenVSP</span>
           </dd>
@@ -666,11 +843,10 @@ a{ color:inherit; }
           <dt>Optimisation &amp; control</dt>
           <dd>
             <span class="chip">CVX</span><span class="chip">IPOPT</span><span class="chip">LMI / SDP synthesis</span>
-            <span class="chip">Model predictive control</span><span class="chip">Pseudospectral methods</span>
-            <span class="chip wip">CasADi</span><span class="chip wip">PyTorch</span>
+            <span class="chip">Reachable set computation</span><span class="chip">Model predictive control</span>
+            <span class="chip">Pseudospectral methods</span>
           </dd>
         </dl>
-        <p class="wipnote">Dashed = in progress through coursework.</p>
       </div>
 
       <div>
@@ -695,10 +871,10 @@ a{ color:inherit; }
   <div class="wrap">
     <h2>Let's talk<br>about robots.</h2>
     <p class="say">
-      I'm always glad to hear from people working on multi-robot coordination,
-      perception-driven autonomy, or anything that has to run in real time on a real machine.
+      I'm always glad to hear from people working on reachability, motion planning,
+      or anything that has to run in real time on a real machine.
     </p>
-    <div class="links">
+    <div class="links-row">
       <a class="primary" href="mailto:hrishav2@illinois.edu">hrishav2@illinois.edu</a>
       <a href="cv.pdf">Download CV (PDF)</a>
       <a href="https://scholar.google.com/citations?user=EYZZYAkAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
@@ -713,9 +889,7 @@ a{ color:inherit; }
 </footer>
 
 <script>
-/* ---------- find the portrait, whatever it's called ----------
-   Tries each name in turn. Add your own filename to this list if you'd
-   rather not rename the file. Case matters once the site is hosted. */
+/* ---------- find the portrait, whatever it's called ---------- */
 (function () {
   var img = document.getElementById('portrait-img');
   var fig = document.getElementById('portrait');
@@ -733,14 +907,95 @@ a{ color:inherit; }
     if (i < names.length){ img.src = names[i]; return; }
     var folder = location.href.replace(/[^/]*$/, '');
     var note = document.getElementById('portrait-tried');
-    if (note) note.textContent = 'Looked in ' + decodeURIComponent(folder) +
-      ' for: ' + names.join(', ');
+    if (note) note.textContent = 'Looked in ' + decodeURIComponent(folder) + ' for: ' + names.join(', ');
     fig.classList.add('no-image');
   }
 
   img.addEventListener('error', next);
   img.src = names[0];
   if (img.complete && img.naturalWidth === 0) next();
+})();
+
+/* ---------- project switcher ---------- */
+(function () {
+  var nav = document.getElementById('proj-nav');
+  if (!nav) return;
+  var tabs = Array.prototype.slice.call(nav.querySelectorAll('button'));
+
+  function show(idx){
+    tabs.forEach(function (t, k){
+      var on = k === idx;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      var p = document.getElementById(t.getAttribute('aria-controls'));
+      if (p) p.classList.toggle('on', on);
+      /* pause any video in a panel we just closed */
+      if (p && !on) p.querySelectorAll('video').forEach(function (v){ try { v.pause(); } catch(e){} });
+    });
+  }
+
+  tabs.forEach(function (t, k){
+    t.addEventListener('click', function (){ show(k); });
+    t.addEventListener('keydown', function (e){
+      var d = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1
+            : e.key === 'ArrowUp'   || e.key === 'ArrowLeft'  ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      var n = (k + d + tabs.length) % tabs.length;
+      tabs[n].focus(); show(n);
+    });
+  });
+})();
+
+/* ---------- media frames: missing-file placeholder + arrows ---------- */
+(function () {
+  document.querySelectorAll('.media').forEach(function (fig){
+    var slot   = fig.querySelector('.slot');
+    var todo   = slot.querySelector('.todo');
+    var counter= fig.querySelector('.counter');
+    var frames = Array.prototype.slice.call(slot.querySelectorAll('img, video'));
+    var live   = [];          // frames whose file actually loaded
+    var at     = 0;
+
+    /* name the missing file in the placeholder */
+    var firstName = frames.length ? frames[0].getAttribute('src') : '';
+    var code = todo && todo.querySelector('code');
+    if (code) code.textContent = firstName;
+
+    function render(){
+      frames.forEach(function (f){ f.style.display = 'none'; });
+      if (!live.length){
+        slot.classList.add('empty');
+        fig.classList.add('single');
+        return;
+      }
+      slot.classList.remove('empty');
+      if (at >= live.length) at = 0;
+      if (at < 0) at = live.length - 1;
+      live[at].style.display = 'block';
+      fig.classList.toggle('single', live.length < 2);
+      if (counter) counter.textContent = live.length > 1 ? (at + 1) + ' / ' + live.length : '';
+    }
+
+    frames.forEach(function (f){
+      function ok(){ if (live.indexOf(f) === -1){ live.push(f); render(); } }
+      function bad(){ f.remove(); render(); }
+      f.addEventListener('error', bad);
+      if (f.tagName === 'IMG'){
+        if (f.complete){ f.naturalWidth ? ok() : bad(); }
+        else f.addEventListener('load', ok);
+      } else {
+        f.addEventListener('loadeddata', ok);
+      }
+    });
+    render();
+
+    fig.querySelectorAll('.nav-btns button').forEach(function (b){
+      b.addEventListener('click', function (){
+        at += parseInt(b.getAttribute('data-step'), 10);
+        render();
+      });
+    });
+  });
 })();
 
 /* ---------- quiet scroll reveal ---------- */
