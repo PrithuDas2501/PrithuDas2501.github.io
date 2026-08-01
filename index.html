@@ -259,6 +259,12 @@ a{ color:inherit; }
 /* --- left: the list of projects --- */
 .proj-nav{ list-style:none; margin:0; padding:0; border-top:1px solid var(--rule); }
 .proj-nav li{ border-bottom:1px solid var(--rule); }
+.proj-nav li.grp{
+  font-family:var(--mono); font-size:10px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--muted);
+  padding:14px 0 6px; border-bottom:0;
+}
+.proj-nav li.grp:first-child{ padding-top:8px; }
 .proj-nav button{
   width:100%; text-align:left; background:none; cursor:pointer;
   border:0; border-left:2px solid transparent;
@@ -283,6 +289,7 @@ a{ color:inherit; }
   /* horizontal strip on small screens so it doesn't eat vertical space */
   .proj-nav{ display:flex; gap:8px; overflow-x:auto; border:0; padding-bottom:6px; }
   .proj-nav li{ border:0; flex:0 0 auto; }
+  .proj-nav li.grp{ display:none; }
   .proj-nav button{
     border:1px solid var(--rule); border-radius:2px; padding:8px 13px;
     white-space:nowrap; background:var(--paper-2);
@@ -741,16 +748,21 @@ a{ color:inherit; }
   <div class="wrap rise">
     <div class="band-head">
       <h2>Additional Projects</h2>
-      <span class="count">5 builds</span>
+      <span class="count">8 projects</span>
     </div>
 
     <div class="showcase">
       <ul class="proj-nav" id="proj-nav" role="tablist" aria-label="Projects">
+        <li class="grp">Hardware builds</li>
         <li><button role="tab" aria-selected="true"  aria-controls="p-gaia"><span class="t">Drone-Mounted Robotic Arm</span><span class="d">2022–23 · Team GAIA</span></button></li>
         <li><button role="tab" aria-selected="false" aria-controls="p-vision"><span class="t">Vision-Based Drone Controller</span><span class="d">2022–23 · Inter-IIT</span></button></li>
         <li><button role="tab" aria-selected="false" aria-controls="p-rotor"><span class="t">Coaxial Rotor Test Rig</span><span class="d">2024 · IIT Madras</span></button></li>
         <li><button role="tab" aria-selected="false" aria-controls="p-agv"><span class="t">Autonomous Ground Vehicle</span><span class="d">2022 · Team Abhiyaan</span></button></li>
         <li><button role="tab" aria-selected="false" aria-controls="p-ta"><span class="t">Autonomous Systems Lab</span><span class="d">Fall 2026 · Teaching</span></button></li>
+        <li class="grp">Modelling &amp; control</li>
+        <li><button role="tab" aria-selected="false" aria-controls="p-mpc"><span class="t">Tube-Based MPC for Manipulators</span><span class="d">2025 · ongoing</span></button></li>
+        <li><button role="tab" aria-selected="false" aria-controls="p-pnpp"><span class="t">Modified PN and PP Guidance</span><span class="d">2024 · IIT Madras</span></button></li>
+        <li><button role="tab" aria-selected="false" aria-controls="p-attitude"><span class="t">Spacecraft Attitude Control</span><span class="d">2024 · IIT Madras</span></button></li>
       </ul>
 
       <div class="proj-stage">
@@ -883,6 +895,74 @@ a{ color:inherit; }
           <p class="role">Teaching Assistant · Crazyflie nano-quadrotors and ROS2 ground robots</p>
           <p class="body">Selected to design and run hands-on laboratory sessions: hardware bring-up, radio and firmware configuration, sensor calibration, state estimation, and flight experiments.</p>
           <p class="body">Guiding students through controller tuning and live debugging of physical experiments, including diagnosing failures that appear only on hardware and not in simulation.</p>
+        </article>
+
+        <!-- ---------- TUBE-BASED MPC ---------- -->
+        <article class="panel" id="p-mpc" role="tabpanel">
+          <figure class="media">
+            <div class="slot">
+              <img src="media/mpc-1.jpg" alt="Manipulator tracking under base disturbance">
+              <div class="todo"><b>Add a figure or screen recording</b><span>Save it as <code></code></span></div>
+            </div>
+            <figcaption>
+              <span class="cap">End-effector error under base perturbation</span>
+              <span class="counter"></span>
+              <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+            </figcaption>
+          </figure>
+
+          <div class="panel-head">
+            <h3>Tube-Based MPC for Manipulator Disturbance Rejection</h3>
+            <span class="meta">Jan 2025 — present</span>
+          </div>
+          <p class="role">Independent project</p>
+          <p class="body">Modelling multi-DOF manipulator dynamics in Pinocchio and implementing tube-based model predictive control to hold end-effector accuracy under base perturbations.</p>
+          <p class="body">Aimed at the mobile-manipulation case, where the base the arm is bolted to is itself a moving robot and the disturbance is therefore constant rather than occasional.</p>
+        </article>
+
+        <!-- ---------- PN / PP GUIDANCE ---------- -->
+        <article class="panel" id="p-pnpp" role="tabpanel">
+          <figure class="media">
+            <div class="slot">
+              <img src="media/pnpp-1.jpg" alt="Path-following trajectories under modified guidance">
+              <div class="todo"><b>Add a figure or screen recording</b><span>Save it as <code></code></span></div>
+            </div>
+            <figcaption>
+              <span class="cap">Look-ahead scheduling vs. the baseline</span>
+              <span class="counter"></span>
+              <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+            </figcaption>
+          </figure>
+
+          <div class="panel-head">
+            <h3>Modified PN and PP Guidance: Replication and Extensions</h3>
+            <span class="meta">Jul — Nov 2024</span>
+          </div>
+          <p class="role">Course project · IIT Madras</p>
+          <p class="body">Replicated <i>Performance and Lyapunov Stability of a Nonlinear Path-Following Guidance Method</i>, then extended it with dynamic scheduling of the look-ahead distance (L<sub>1</sub>) and multiple look-ahead points.</p>
+        </article>
+
+        <!-- ---------- SPACECRAFT ATTITUDE ---------- -->
+        <article class="panel" id="p-attitude" role="tabpanel">
+          <figure class="media">
+            <div class="slot">
+              <img src="media/attitude-1.jpg" alt="Spacecraft attitude convergence">
+              <div class="todo"><b>Add a figure or screen recording</b><span>Save it as <code></code></span></div>
+            </div>
+            <figcaption>
+              <span class="cap">Attitude convergence with reaction wheels</span>
+              <span class="counter"></span>
+              <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+            </figcaption>
+          </figure>
+
+          <div class="panel-head">
+            <h3>Spacecraft Attitude Control using 3-Axis Reaction Wheels</h3>
+            <span class="meta">Jul — Nov 2024</span>
+          </div>
+          <p class="role">Course project · IIT Madras</p>
+          <p class="body">Replicated <i>Inertia-Free Spacecraft Attitude Control Using Reaction Wheels</i>, reproducing the controller without any knowledge of the spacecraft's inertia matrix.</p>
+          <p class="stat">Identified a singularity-related flaw in the control input computation at certain initial orientations</p>
         </article>
 
       </div>
