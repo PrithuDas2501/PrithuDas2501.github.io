@@ -391,7 +391,23 @@ a{ color:inherit; }
 @media (max-width:760px){ .thread.feature{ grid-template-columns:1fr; } }
 
 .slideshow{ margin:0; border:1px solid var(--rule); background:var(--paper-2); border-radius:2px; }
-.slides{ position:relative; }
+.slides{
+  position:relative;
+  touch-action:pan-y;      /* horizontal gestures swipe; vertical still scrolls the page */
+  user-select:none; -webkit-user-select:none;
+  cursor:grab;
+}
+.slides.dragging{ cursor:grabbing; }
+.slide.drag{ transition:none; }
+
+/* thin progress line showing time to the next slide */
+.sprog{ height:2px; background:var(--rule); overflow:hidden; }
+.sprog i{
+  display:block; height:100%; width:100%; background:var(--flux);
+  transform:scaleX(0); transform-origin:left center;
+}
+.sprog i.run{ transform:scaleX(1); transition:transform linear; }
+.slideshow.paused .sprog i{ transition:none; transform:scaleX(0); }
 .slide{ display:none; }
 .slide.on{ display:block; animation:fade .28s ease; }
 .frame{
@@ -429,7 +445,14 @@ a{ color:inherit; }
 }
 .dot:hover{ border-color:var(--flux); }
 .dot.on{ background:var(--flux); border-color:var(--flux); }
-.scount{ font-family:var(--mono); font-size:11px; color:var(--muted); }
+.scount{ font-family:var(--mono); font-size:11px; color:var(--muted); min-width:34px; text-align:right; }
+.pausebtn{
+  background:none; border:1px solid var(--rule); color:var(--muted);
+  font-family:var(--mono); font-size:9px; line-height:1;
+  padding:6px 7px; border-radius:2px; cursor:pointer;
+}
+.pausebtn:hover{ border-color:var(--flux); color:var(--flux); }
+.pausebtn[aria-pressed="true"]{ color:var(--flux); border-color:var(--flux); }
 
 /* the timing table, typeset rather than screenshotted */
 .ttable{ border-collapse:collapse; font-family:var(--mono); font-size:12px; }
@@ -620,10 +643,7 @@ a{ color:inherit; }
         
       <figure class="slideshow" id="c1-show" aria-label="Reachable set results">
         <div class="slides">
-          <div class="slide on" data-title="2D illustration">
-            <div class="frame"><a class="zoom" href="media/reach-1.png" target="_blank" rel="noopener" title="Open full size"><img src="media/reach-1.png" alt="Reachable sets of a 2D system, nominal in red and optimized in green."></a></div>
-          </div>
-          <div class="slide" data-title="ADMIRE fighter jet">
+          <div class="slide on" data-title="ADMIRE fighter jet">
             <div class="frame"><a class="zoom" href="media/reach-2.png" target="_blank" rel="noopener" title="Open full size"><img src="media/reach-2.png" alt="The construction applied to the ADMIRE fighter jet model."></a></div>
           </div>
           <div class="slide" data-title="Tightness vs. CORA">
@@ -648,20 +668,21 @@ a{ color:inherit; }
             <div class="frame"><a class="zoom" href="media/road-curved-green.png" target="_blank" rel="noopener" title="Open full size"><img src="media/road-curved-green.png" alt="Curved road: the tighter directional set leaves room to overtake."></a></div>
           </div>
         </div>
+        <div class="sprog"><i></i></div>
         <div class="sbar">
           <button type="button" class="arw" data-step="-1" aria-label="Previous slide">←</button>
           <div class="dots">
-            <button type="button" class="dot on" data-go="0" aria-label="2D illustration"></button>
-            <button type="button" class="dot" data-go="1" aria-label="ADMIRE fighter jet"></button>
-            <button type="button" class="dot" data-go="2" aria-label="Tightness vs. CORA"></button>
-            <button type="button" class="dot" data-go="3" aria-label="Extent along d"></button>
-            <button type="button" class="dot" data-go="4" aria-label="Compute time"></button>
-            <button type="button" class="dot" data-go="5" aria-label="Straight road, standard reach"></button>
-            <button type="button" class="dot" data-go="6" aria-label="Straight road, directional"></button>
-            <button type="button" class="dot" data-go="7" aria-label="Curved road, standard reach"></button>
-            <button type="button" class="dot" data-go="8" aria-label="Curved road, directional"></button>
+            <button type="button" class="dot on" data-go="0" aria-label="ADMIRE fighter jet"></button>
+            <button type="button" class="dot" data-go="1" aria-label="Tightness vs. CORA"></button>
+            <button type="button" class="dot" data-go="2" aria-label="Extent along d"></button>
+            <button type="button" class="dot" data-go="3" aria-label="Compute time"></button>
+            <button type="button" class="dot" data-go="4" aria-label="Straight road, standard reach"></button>
+            <button type="button" class="dot" data-go="5" aria-label="Straight road, directional"></button>
+            <button type="button" class="dot" data-go="6" aria-label="Curved road, standard reach"></button>
+            <button type="button" class="dot" data-go="7" aria-label="Curved road, directional"></button>
           </div>
           <button type="button" class="arw" data-step="1" aria-label="Next slide">→</button>
+          <button type="button" class="pausebtn" aria-label="Pause slideshow" aria-pressed="false">❚❚</button>
           <span class="scount"></span>
         </div>
       </figure>
@@ -1294,39 +1315,142 @@ a{ color:inherit; }
   });
 })();
 
-/* ---------- C.1 slideshow ---------- */
+/* ---------- C.1 slideshow ----------
+   Advances on its own, pauses when you hover or interact, and can be
+   swiped on a touchscreen. Change DELAY below to speed it up or slow it
+   down (milliseconds). */
 (function () {
+  var DELAY = 5000;
+
   var box = document.getElementById('c1-show');
   if (!box) return;
+
+  var wrap   = box.querySelector('.slides');
   var slides = Array.prototype.slice.call(box.querySelectorAll('.slide'));
   var dots   = Array.prototype.slice.call(box.querySelectorAll('.dot'));
   var count  = box.querySelector('.scount');
-  var at = 0;
+  var bar    = box.querySelector('.sprog i');
+  var pauseB = box.querySelector('.pausebtn');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function show(i){
+  var at = 0, timer = null, stopped = reduce, hovering = false, onScreen = true;
+
+  function armBar(){
+    if (!bar) return;
+    bar.classList.remove('run');
+    bar.style.transitionDuration = '0ms';
+    void bar.offsetWidth;                     // force restart
+    if (running()){
+      bar.style.transitionDuration = DELAY + 'ms';
+      bar.classList.add('run');
+    }
+  }
+  function running(){ return !stopped && !hovering && onScreen; }
+
+  function tick(){
+    clearTimeout(timer);
+    box.classList.toggle('paused', !running());
+    armBar();
+    if (running()) timer = setTimeout(function (){ show(at + 1); }, DELAY);
+  }
+
+  function show(i, quiet){
     at = (i + slides.length) % slides.length;
     slides.forEach(function (s, k){
-      var on = k === at;
-      s.classList.toggle('on', on);
-      s.querySelectorAll('video').forEach(function (v){
-        if (on){ var q = v.play(); if (q && q.catch) q.catch(function(){}); }
-        else { try { v.pause(); v.currentTime = 0; } catch(e){} }
-      });
+      s.classList.toggle('on', k === at);
+      s.style.transform = '';
+      s.classList.remove('drag');
     });
     dots.forEach(function (d, k){ d.classList.toggle('on', k === at); });
     if (count) count.textContent = (at + 1) + ' / ' + slides.length;
+    if (!quiet) tick();
+  }
+
+  /* --- stop advancing once the visitor takes control --- */
+  function takeOver(){
+    stopped = true;
+    if (pauseB){ pauseB.textContent = '▶'; pauseB.setAttribute('aria-pressed','true');
+                 pauseB.setAttribute('aria-label','Play slideshow'); }
+    tick();
   }
 
   box.querySelectorAll('.arw').forEach(function (b){
-    b.addEventListener('click', function (){ show(at + parseInt(b.getAttribute('data-step'), 10)); });
+    b.addEventListener('click', function (){ takeOver(); show(at + parseInt(b.getAttribute('data-step'), 10)); });
   });
   dots.forEach(function (d){
-    d.addEventListener('click', function (){ show(parseInt(d.getAttribute('data-go'), 10)); });
+    d.addEventListener('click', function (){ takeOver(); show(parseInt(d.getAttribute('data-go'), 10)); });
   });
+  if (pauseB) pauseB.addEventListener('click', function (){
+    stopped = !stopped;
+    pauseB.textContent = stopped ? '▶' : '❚❚';
+    pauseB.setAttribute('aria-pressed', stopped ? 'true' : 'false');
+    pauseB.setAttribute('aria-label', stopped ? 'Play slideshow' : 'Pause slideshow');
+    tick();
+  });
+
   box.addEventListener('keydown', function (e){
-    if (e.key === 'ArrowRight'){ e.preventDefault(); show(at + 1); }
-    if (e.key === 'ArrowLeft'){ e.preventDefault(); show(at - 1); }
+    if (e.key === 'ArrowRight'){ e.preventDefault(); takeOver(); show(at + 1); }
+    if (e.key === 'ArrowLeft'){  e.preventDefault(); takeOver(); show(at - 1); }
   });
+
+  /* pause while the pointer is over it, and while it's off screen */
+  box.addEventListener('mouseenter', function (){ hovering = true;  tick(); });
+  box.addEventListener('mouseleave', function (){ hovering = false; tick(); });
+  box.addEventListener('focusin',    function (){ hovering = true;  tick(); });
+  box.addEventListener('focusout',   function (){ hovering = false; tick(); });
+
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function (es){
+      onScreen = es[0].isIntersecting; tick();
+    }, { threshold: 0.25 }).observe(box);
+  }
+
+  /* --- swipe / drag --- */
+  var down = false, x0 = 0, y0 = 0, dx = 0, axis = null, moved = false;
+
+  wrap.addEventListener('pointerdown', function (e){
+    if (e.button && e.button !== 0) return;
+    down = true; moved = false; axis = null; dx = 0;
+    x0 = e.clientX; y0 = e.clientY;
+    wrap.classList.add('dragging');
+  });
+
+  wrap.addEventListener('pointermove', function (e){
+    if (!down) return;
+    dx = e.clientX - x0;
+    var dy = e.clientY - y0;
+    if (!axis && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+    if (axis !== 'x') return;
+    moved = true;
+    hovering = true; tick();
+    var cur = slides[at];
+    cur.classList.add('drag');
+    cur.style.transform = 'translateX(' + (dx * 0.35) + 'px)';
+  });
+
+  function release(){
+    if (!down) return;
+    down = false;
+    wrap.classList.remove('dragging');
+    var cur = slides[at];
+    cur.classList.remove('drag');
+    cur.style.transform = '';
+    if (axis === 'x' && Math.abs(dx) > 45){
+      takeOver();
+      show(at + (dx < 0 ? 1 : -1));
+    } else {
+      hovering = false; tick();
+    }
+    axis = null; dx = 0;
+  }
+  wrap.addEventListener('pointerup', release);
+  wrap.addEventListener('pointercancel', release);
+  wrap.addEventListener('pointerleave', release);
+
+  /* a swipe shouldn't also open the full-size image */
+  wrap.addEventListener('click', function (e){
+    if (moved){ e.preventDefault(); e.stopPropagation(); moved = false; }
+  }, true);
 
   show(0);
 })();
