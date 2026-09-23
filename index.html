@@ -377,6 +377,9 @@ a{ color:inherit; }
 .media.mini figcaption{ padding:7px 9px; font-size:10px; gap:8px; }
 .media.mini .nav-btns button{ padding:3px 7px; font-size:11px; }
 .media.mini .todo{ padding:16px; font-size:11px; line-height:1.6; gap:6px; }
+.media.mini.wide .slot{ aspect-ratio:16/9; }
+.media figcaption .slink.full{ margin-left:auto; font-size:10px; }
+.media figcaption .slink.full + .counter{ display:none; }
 
 /* ============================================================
    SLIDESHOW — sits beside the C.1 description
@@ -624,6 +627,46 @@ a{ color:inherit; }
       <span class="count">2022 — present</span>
     </div>
 
+    <!-- ===== NEW LINE OF WORK: direction-conditioned reachability =====
+         CHECK BEFORE PUBLISHING:
+           1. Dates — I used "2026 — present" as a guess. Correct it below.
+           2. Status — I labelled it "preprint" from the filename (…_Arxiv.pdf).
+              If it's under review, or already on arXiv with a public link,
+              change the tag and the side text.
+           3. The PDF is served from media/direction-conditioned-reachability.pdf.
+              Delete the "Paper ↗" link if you'd rather not post it yet. -->
+    <article class="thread">
+      <div class="side">
+        <span class="tag">preprint</span><br>
+        2026 — present<br>
+        LEADCAT Lab, UIUC<br>
+        Prof. Melkior Ornik
+        <a class="slink" href="media/direction-conditioned-reachability.pdf" target="_blank" rel="noopener">Paper ↗</a>
+      </div>
+      <div>
+        <h3>Direction-conditioned reachability for motion prediction</h3>
+        <ul>
+          <li>A planner usually needs only how far a nearby agent can move in <i>one</i> direction — toward the robot — not its entire reachable set. Given a query direction <b>d</b>, the method selects a single admissible model (A*, B*) from an uncertain matrix family whose reachable set extends nearly as far along <b>d</b> as the whole family's, then propagates only that model.</li>
+          <li>On an uncertain linearized bicycle model, the complete selection-and-computation pipeline runs about 3× faster than propagating the full uncertain family in CORA, while its extent along <b>d</b> stays within 5% of the family's.</li>
+          <li>Demonstrated in closed loop: at every replanning step the ego asks how far each nearby vehicle can move toward it, and reroutes around the resulting sets — fast enough to fit inside a 0.4 s replanning period, which the full uncertain computation would not.</li>
+        </ul>
+      </div>
+      <figure class="media mini wide">
+        <div class="slot">
+          <video class="contain" autoplay muted loop playsinline preload="auto" aria-label="Closed-loop simulation: the ego vehicle replans around direction-conditioned reachable sets of two moving vehicles.">
+            <source src="media/evasive-planning.mp4" type="video/mp4">
+            <source src="media/evasive-planning.webm" type="video/webm">
+          </video>
+          <div class="todo"><b>Add a figure</b><span><code></code></span></div>
+        </div>
+        <figcaption>
+          <span class="cap">Closed-loop replanning around predicted sets</span>
+          <a class="slink full" href="media/evasive-planning.mp4" target="_blank" rel="noopener">full size ↗</a>
+          <span class="counter"></span>
+          <span class="nav-btns"><button type="button" data-step="-1" aria-label="Previous image">←</button><button type="button" data-step="1" aria-label="Next image">→</button></span>
+        </figcaption>
+      </figure>
+    </article>
         <article class="thread feature">
       <div class="side">
         <span class="tag">C.1</span><br>
@@ -886,7 +929,7 @@ a{ color:inherit; }
         <li><button role="tab" aria-selected="false" aria-controls="p-vision"><span class="t">Vision-Based Drone Controller</span><span class="d">2022–23 · Inter-IIT</span></button></li>
         <li><button role="tab" aria-selected="false" aria-controls="p-agv"><span class="t">Autonomous Ground Vehicle</span><span class="d">2022 · Team Abhiyaan</span></button></li>
         <li class="grp">Simulation Only</li>
-        <li><button role="tab" aria-selected="false" aria-controls="p-mpc"><span class="t">Tube-Based MPC for Manipulators</span><span class="d">2025 . UIUC</span></button></li>
+        <li><button role="tab" aria-selected="false" aria-controls="p-mpc"><span class="t">Tube-Based MPC for Manipulators</span><span class="d">2025</span></button></li>
         <li><button role="tab" aria-selected="false" aria-controls="p-pnpp"><span class="t">Modified PN and PP Guidance</span><span class="d">2024 · IIT Madras</span></button></li>
         <li><button role="tab" aria-selected="false" aria-controls="p-attitude"><span class="t">Spacecraft Attitude Control</span><span class="d">2024 · IIT Madras</span></button></li>
       </ul>
@@ -1288,7 +1331,10 @@ a{ color:inherit; }
         if (f.complete){ f.naturalWidth ? ok() : bad(); }
         else f.addEventListener('load', ok);
       } else {
+        if (f.readyState >= 1) ok();
+        f.addEventListener('loadedmetadata', ok);
         f.addEventListener('loadeddata', ok);
+        f.addEventListener('canplay', ok);
       }
     });
     render();
@@ -1307,6 +1353,49 @@ a{ color:inherit; }
       var c = fig.querySelector('.counter');
       if (c) c.textContent = (nxt + 1) + ' / ' + vis.length;
     });
+  });
+})();
+
+/* ---------- play figure videos only while they're on screen ----------
+   More reliable than relying on the autoplay attribute, and it stops the
+   browser decoding video nobody is looking at. */
+(function () {
+  var vids = Array.prototype.slice.call(document.querySelectorAll('.media video'));
+  if (!vids.length) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function start(v){ var q = v.play(); if (q && q.catch) q.catch(function(){}); }
+  function onScreen(v){
+    var r = v.getBoundingClientRect();
+    return r.bottom > 0 && r.top < (window.innerHeight || 0);
+  }
+
+  if (reduce){
+    vids.forEach(function (v){ v.removeAttribute('autoplay'); v.setAttribute('controls',''); });
+    return;
+  }
+  if (!('IntersectionObserver' in window)){
+    vids.forEach(function (v){ v.loop = true; start(v); });
+    return;
+  }
+  var io = new IntersectionObserver(function (es){
+    es.forEach(function (en){
+      var v = en.target;
+      if (en.isIntersecting) start(v);
+      else { try { v.pause(); } catch(e){} }
+    });
+  }, { threshold: 0.2 });
+  vids.forEach(function (v){
+    /* Loop forever regardless of the clip's length. The loop attribute does
+       this on its own in most browsers; the 'ended' and 'pause' handlers are
+       a safety net for the ones where it doesn't, so swapping in a longer or
+       shorter video needs no change here. */
+    v.loop = true;
+    v.addEventListener('ended', function (){ v.currentTime = 0; start(v); });
+    v.addEventListener('pause', function (){
+      if (onScreen(v) && !v.ended && !v.seeking) start(v);
+    });
+    io.observe(v);
   });
 })();
 
