@@ -215,6 +215,7 @@ a{ color:inherit; }
 
 /* no figure loaded → drop the third column so the text uses the full width */
 .thread.no-media{ grid-template-columns:170px minmax(0,1fr); }
+.thread.feature.no-media{ grid-template-columns:150px minmax(0,1fr); }
 
 /* medium screens: figure drops below the text, capped so it isn't huge */
 @media (max-width:1080px){
@@ -377,7 +378,7 @@ a{ color:inherit; }
 .media.mini figcaption{ padding:7px 9px; font-size:10px; gap:8px; }
 .media.mini .nav-btns button{ padding:3px 7px; font-size:11px; }
 .media.mini .todo{ padding:16px; font-size:11px; line-height:1.6; gap:6px; }
-.media.mini.wide .slot{ aspect-ratio:16/9; }
+.media.mini.wide .slot{ aspect-ratio:1476/900; }   /* the clip's own ratio — no letterboxing */
 .media figcaption .slink.full{ margin-left:auto; font-size:10px; }
 .media figcaption .slink.full + .counter{ display:none; }
 
@@ -389,7 +390,8 @@ a{ color:inherit; }
 .thread.feature{ grid-template-columns:150px minmax(0,1.08fr) minmax(330px,1fr); }
 @media (max-width:1080px){
   .thread.feature{ grid-template-columns:190px minmax(0,1fr); }
-  .thread.feature .slideshow{ grid-column:1 / -1; max-width:640px; margin-top:6px; }
+  .thread.feature .slideshow,
+  .thread.feature .media{ grid-column:1 / -1; max-width:640px; margin-top:6px; }
 }
 @media (max-width:760px){ .thread.feature{ grid-template-columns:1fr; } }
 
@@ -635,7 +637,7 @@ a{ color:inherit; }
               change the tag and the side text.
            3. The PDF is served from media/direction-conditioned-reachability.pdf.
               Delete the "Paper ↗" link if you'd rather not post it yet. -->
-    <article class="thread">
+    <article class="thread feature">
       <div class="side">
         <span class="tag">preprint</span><br>
         2026 — present<br>
@@ -653,7 +655,7 @@ a{ color:inherit; }
       </div>
       <figure class="media mini wide">
         <div class="slot">
-          <video class="contain" autoplay muted loop playsinline preload="auto" aria-label="Closed-loop simulation: the ego vehicle replans around direction-conditioned reachable sets of two moving vehicles.">
+          <video autoplay muted loop playsinline preload="auto" aria-label="Closed-loop simulation: the ego vehicle replans around direction-conditioned reachable sets of two moving vehicles.">
             <source src="media/evasive-planning.mp4" type="video/mp4">
             <source src="media/evasive-planning.webm" type="video/webm">
           </video>
@@ -1335,6 +1337,17 @@ a{ color:inherit; }
         f.addEventListener('loadedmetadata', ok);
         f.addEventListener('loadeddata', ok);
         f.addEventListener('canplay', ok);
+        /* A <video> with <source> children never fires 'error' on itself, so
+           watch the sources and fall back to a network-state check. Without
+           this a missing clip would leave an empty frame behind. */
+        var srcs = Array.prototype.slice.call(f.querySelectorAll('source'));
+        var left = srcs.length;
+        srcs.forEach(function (s){
+          s.addEventListener('error', function (){ if (--left <= 0) bad(); });
+        });
+        setTimeout(function (){
+          if (!settled && f.readyState === 0 && f.networkState === 3) bad();
+        }, 4000);
       }
     });
     render();
