@@ -629,6 +629,30 @@ a{ color:inherit; }
       <span class="count">2022 — present</span>
     </div>
 
+    <article class="thread feature" id="reach-guided-driving">
+      <div class="side">
+        <span class="tag">Ongoing research</span><br>
+        2026 · Autonomous driving
+      </div>
+      <div>
+        <h3>Guiding a diffusion planner with vehicle reachable sets</h3>
+        <ul>
+          <li>At a crossing, a car can follow the right path and still arrive too soon. I extended Diffusion-Planner to estimate where nearby vehicles could be at successive points in time and use those reachable sets to guide denoising.</li>
+          <li>Late in denoising, the planner tests several speeds along the proposed path, including a full stop. It weighs overlap between the ego vehicle’s footprint and the reachable sets at each time step against the cost of slowing down.</li>
+          <li>Compared the guided and unguided planners in the same closed-loop nuPlan crossing scenario. The replay shows each vehicle’s speed, its proposed two-second path, and the path it actually drove.</li>
+        </ul>
+      </div>
+      <figure class="media mini wide">
+        <div class="slot">
+          <video class="contain" src="media/reach-guided-yielding.mp4" muted loop playsinline controls preload="metadata" aria-label="Crossing replay with unguided planning on the left and reach-set timing guidance on the right"></video>
+        </div>
+        <figcaption>
+          <span class="cap">Red outlines show where the crossing vehicle could be.</span>
+          <a class="slink full" href="media/reach-guided-yielding.mp4" target="_blank" rel="noopener">full size ↗</a>
+        </figcaption>
+      </figure>
+    </article>
+
     <article class="thread">
       <div class="side">
         <span class="tag">Ongoing research</span>
