@@ -629,6 +629,20 @@ a{ color:inherit; }
       <span class="count">2022 — present</span>
     </div>
 
+    <article class="thread">
+      <div class="side">
+        <span class="tag">Ongoing research</span>
+      </div>
+      <div>
+        <h3>Certifying action chunks for robotic arms</h3>
+        <ul>
+          <li>A manipulation policy proposes a short sequence of targets, or <i>action chunk</i>. Before the arm moves, the certifier uses the range of dynamics assumed during training to estimate how far the end effector could drift toward an obstacle over the entire chunk.</li>
+          <li>Developed three faster ways to select the arm model used for this reachability check. The most effective starts with the direction suggested by the gradient and refines that choice while keeping the model parameters physically coupled.</li>
+          <li>Across 40 simulated plant settings, the refined method cut mean certification time from 74.19 to 21.03 ms per chunk while matching grid search’s minimum clearance (2.60 cm) and mean task time (4.00 s).</li>
+        </ul>
+      </div>
+    </article>
+
     <!-- ===== direction-conditioned reachability (C.5) =====
          Title, authors and link verified against arXiv:2609.27077.
          STILL TO CHECK: the date range "2026 — present" below is my guess.
