@@ -638,9 +638,9 @@ a{ color:inherit; }
       <div>
         <h3>Guiding a diffusion planner with vehicle reachable sets</h3>
         <ul>
-          <li>At a crossing, a car can follow the right path and still arrive too soon. I extended Diffusion-Planner to estimate where nearby vehicles could be at successive points in time and use those reachable sets to guide denoising.</li>
-          <li>Late in denoising, the planner tests several speeds along the proposed path, including a full stop. It weighs overlap between the ego vehicle’s footprint and the reachable sets at each time step against the cost of slowing down.</li>
-          <li>Compared the guided and unguided planners in the same closed-loop nuPlan crossing scenario. The replay shows each vehicle’s speed, its proposed two-second path, and the path it actually drove.</li>
+          <li>A generative planner can propose several ways through the same traffic scene. At an intersection, for example, it can consider both crossing ahead of another car and slowing down to pass behind it.</li>
+          <li>We estimate where each nearby vehicle could be over the next few seconds. These regions are its <i>reachable sets</i>. As the planner refines a trajectory, we guide it away from places another vehicle could occupy at the same time.</li>
+          <li>We tested both planners on the same 15 yielding scenarios from nuPlan, a driving simulation benchmark. Our guided planner averaged <b>82.4 out of 100</b>, compared with <b>76.5</b> for the unguided <a class="slink" href="https://arxiv.org/abs/2501.15564" target="_blank" rel="noopener">Diffusion-Planner ↗</a>.</li>
         </ul>
       </div>
       <figure class="slideshow" aria-label="Autonomous driving simulations">
