@@ -639,8 +639,8 @@ a{ color:inherit; }
         <h3>Guiding a diffusion planner with vehicle reachable sets</h3>
         <ul>
           <li>A generative planner can propose several ways through the same traffic scene. At an intersection, for example, it can consider both crossing ahead of another car and slowing down to pass behind it.</li>
-          <li>We estimate where each nearby vehicle could be over the next few seconds. These regions are its <i>reachable sets</i>. As the planner refines a trajectory, we guide it away from places another vehicle could occupy at the same time.</li>
-          <li>We tested both planners on the same 15 yielding scenarios from nuPlan, a driving simulation benchmark. Our guided planner averaged <b>82.4 out of 100</b>, compared with <b>76.5</b> for the unguided <a class="slink" href="https://arxiv.org/abs/2501.15564" target="_blank" rel="noopener">Diffusion-Planner ↗</a>.</li>
+          <li>We estimate where each nearby vehicle could be over the next few seconds. We build these regions using <i>directional reachable sets</i> from my earlier work on fast motion prediction. They estimate how far a vehicle could move in a direction that matters to the planner. As the planner refines a trajectory, we guide it away from places another vehicle could occupy at the same time.</li>
+          <li>We tested both planners on the same 15 yielding scenarios from nuPlan, a driving simulation benchmark. Our guided planner averaged <b>82.4 out of 100</b>, compared with <b>76.5</b> for the unguided Diffusion-Planner.</li>
         </ul>
       </div>
       <figure class="slideshow" aria-label="Autonomous driving simulations">
@@ -667,7 +667,7 @@ a{ color:inherit; }
       </figure>
     </article>
 
-    <article class="thread">
+    <article class="thread feature">
       <div class="side">
         <span class="tag">Ongoing research</span>
       </div>
@@ -679,6 +679,15 @@ a{ color:inherit; }
           <li>Across 40 simulated plant settings, the refined method cut mean certification time from 74.19 to 21.03 ms per chunk while matching grid search’s minimum clearance (2.60 cm) and mean task time (4.00 s).</li>
         </ul>
       </div>
+      <figure class="media mini">
+        <div class="slot" style="aspect-ratio:1160/490">
+          <img class="contain" src="media/arm-chunk-clearance.png" width="1160" height="490" alt="Two simulated arms at 1.1 seconds. The arm without certification has −0.7 cm clearance from the wall. The certified arm has stopped with 11.5 cm of clearance.">
+        </div>
+        <figcaption>
+          <span class="cap">At 1.1 seconds, the uncertified arm has crossed the wall boundary. The certified arm holds 11.5 cm clear.</span>
+          <a class="slink full" href="media/arm-chunk-clearance.png" target="_blank" rel="noopener">full size ↗</a>
+        </figcaption>
+      </figure>
     </article>
 
     <!-- ===== direction-conditioned reachability (C.5) =====
