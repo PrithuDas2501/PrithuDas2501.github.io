@@ -433,6 +433,7 @@ a{ color:inherit; }
   max-width:100%; max-height:100%; width:auto; height:auto;
   object-fit:contain; display:block;
 }
+.clip-caption{ padding:8px 12px; min-height:4.5em; font-family:var(--mono); font-size:11px; color:var(--muted); }
 .sbar{
   display:flex; align-items:center; gap:8px;
   padding:8px 12px; border-top:1px solid var(--rule);
@@ -642,14 +643,27 @@ a{ color:inherit; }
           <li>Compared the guided and unguided planners in the same closed-loop nuPlan crossing scenario. The replay shows each vehicle’s speed, its proposed two-second path, and the path it actually drove.</li>
         </ul>
       </div>
-      <figure class="media mini wide">
-        <div class="slot">
-          <video class="contain" src="media/reach-guided-yielding.mp4" muted loop playsinline controls preload="metadata" aria-label="Crossing replay with unguided planning on the left and reach-set timing guidance on the right"></video>
+      <figure class="slideshow" aria-label="Autonomous driving simulations">
+        <div class="slides">
+          <div class="slide on">
+            <div class="frame"><video src="media/reach-guided-yielding.mp4" muted playsinline controls preload="metadata" aria-label="Guided and unguided crossing"></video></div>
+            <div class="clip-caption">Unguided planning on the left, reach-set timing guidance on the right. <a class="slink" href="media/reach-guided-yielding.mp4" target="_blank" rel="noopener">full size ↗</a></div>
+          </div>
+          <div class="slide">
+            <div class="frame"><video src="media/intersection-directional-reach.mp4" muted playsinline controls preload="metadata" aria-label="Directional reachable sets at an intersection"></video></div>
+            <div class="clip-caption">Pink regions show directional occupancy with clearance. The green line shows the ego vehicle’s eight-second plan. <a class="slink" href="media/intersection-directional-reach.mp4" target="_blank" rel="noopener">full size ↗</a></div>
+          </div>
         </div>
-        <figcaption>
-          <span class="cap">Red outlines show where the crossing vehicle could be.</span>
-          <a class="slink full" href="media/reach-guided-yielding.mp4" target="_blank" rel="noopener">full size ↗</a>
-        </figcaption>
+        <div class="sbar">
+          <button type="button" class="arw" data-step="-1" aria-label="Previous slide">←</button>
+          <div class="dots">
+            <button type="button" class="dot on" data-go="0" aria-label="Guided and unguided crossing"></button>
+            <button type="button" class="dot" data-go="1" aria-label="Directional reachable sets at an intersection"></button>
+          </div>
+          <button type="button" class="arw" data-step="1" aria-label="Next slide">→</button>
+          <button type="button" class="pausebtn" aria-label="Pause slideshow" aria-pressed="false">❚❚</button>
+          <span class="scount"></span>
+        </div>
       </figure>
     </article>
 
@@ -1455,15 +1469,12 @@ a{ color:inherit; }
   });
 })();
 
-/* ---------- C.1 slideshow ----------
+/* ---------- Research slideshows ----------
    Advances on its own, pauses when you hover or interact, and can be
    swiped on a touchscreen. Change DELAY below to speed it up or slow it
    down (milliseconds). */
-(function () {
+document.querySelectorAll('.slideshow').forEach(function (box){
   var DELAY = 5000;
-
-  var box = document.getElementById('c1-show');
-  if (!box) return;
 
   var wrap   = box.querySelector('.slides');
   var slides = Array.prototype.slice.call(box.querySelectorAll('.slide'));
@@ -1491,12 +1502,23 @@ a{ color:inherit; }
     clearTimeout(timer);
     box.classList.toggle('paused', !running());
     armBar();
-    if (running()) timer = setTimeout(function (){ show(at + 1); }, DELAY);
+    var video = slides[at].querySelector('video');
+    if (video){
+      if (!onScreen) video.pause();
+      if (running() && video.ended) timer = setTimeout(function (){ show(at + 1); }, 0);
+    } else if (running()){
+      timer = setTimeout(function (){ show(at + 1); }, DELAY);
+    }
   }
 
   function show(i, quiet){
     at = (i + slides.length) % slides.length;
     slides.forEach(function (s, k){
+      var video = s.querySelector('video');
+      if (video){
+        video.pause();
+        video.currentTime = 0;
+      }
       s.classList.toggle('on', k === at);
       s.style.transform = '';
       s.classList.remove('drag');
@@ -1504,7 +1526,20 @@ a{ color:inherit; }
     dots.forEach(function (d, k){ d.classList.toggle('on', k === at); });
     if (count) count.textContent = (at + 1) + ' / ' + slides.length;
     if (!quiet) tick();
+    playActiveVideo();
   }
+
+  function playActiveVideo(){
+    var video = slides[at].querySelector('video');
+    if (video && onScreen && (!reduce || !stopped) && !video.ended) video.play().catch(function (){});
+  }
+
+  slides.forEach(function (slide){
+    var video = slide.querySelector('video');
+    if (video) video.addEventListener('ended', function (){
+      if (slide === slides[at] && running()) show(at + 1);
+    });
+  });
 
   /* --- stop advancing once the visitor takes control --- */
   function takeOver(){
@@ -1526,6 +1561,7 @@ a{ color:inherit; }
     pauseB.setAttribute('aria-pressed', stopped ? 'true' : 'false');
     pauseB.setAttribute('aria-label', stopped ? 'Play slideshow' : 'Pause slideshow');
     tick();
+    if (!stopped) playActiveVideo();
   });
 
   box.addEventListener('keydown', function (e){
@@ -1542,6 +1578,7 @@ a{ color:inherit; }
   if ('IntersectionObserver' in window){
     new IntersectionObserver(function (es){
       onScreen = es[0].isIntersecting; tick();
+      if (onScreen) playActiveVideo();
     }, { threshold: 0.25 }).observe(box);
   }
 
@@ -1592,8 +1629,9 @@ a{ color:inherit; }
     if (moved){ e.preventDefault(); e.stopPropagation(); moved = false; }
   }, true);
 
+  if (reduce) takeOver();
   show(0);
-})();
+});
 
 /* ---------- quiet scroll reveal ---------- */
 (function () {
